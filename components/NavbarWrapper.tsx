@@ -1,0 +1,29 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+import Navbar from "@/components/shared/navber";
+
+export default function NavbarWrapper() {
+  const pathname = usePathname();
+
+  if (!pathname) {
+    return null;
+  }
+
+  if (
+    pathname === "/login" ||
+    pathname.startsWith("/login/") ||
+    pathname.startsWith("/auth")
+  ) {
+    return null;
+  }
+  if (
+    pathname === "/register" ||
+    pathname.startsWith("/register/") ||
+    pathname.startsWith("/auth")
+  ) {
+    return null;
+  }
+
+  return <Navbar />;
+}
