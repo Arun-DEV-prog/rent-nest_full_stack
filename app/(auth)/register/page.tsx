@@ -1,24 +1,10 @@
-import type { RegisterFormData } from "@/lib/registerSchema";
 import RegisterForm from "../_component/RegisterForm";
 import PromoCarousel from "../_component/Promocarousel";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { registerAction } from "../_actions/authActions";
 
 export default function RegisterPage() {
-  const handleRegister = async (data: RegisterFormData) => {
-    "use server";
-    // data is already validated and typed by zod:
-    // { name, email, password, phone, role, divison, district }
-    console.log("Register submitted:", data);
-
-    // Example: call your API route here
-    // await fetch(`${process.env.API_BASE_URL}/auth/register`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(data),
-    // });
-  };
-
   return (
     <main className="min-h-screen w-full flex items-center justify-center bg-[#F7F1E8] px-6 py-12">
       <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -29,7 +15,7 @@ export default function RegisterPage() {
           <ArrowLeft className="h-4 w-4" />
           হোম
         </Link>
-        <RegisterForm onSubmit={handleRegister} />
+        <RegisterForm action={registerAction} />
         <PromoCarousel />
       </div>
     </main>

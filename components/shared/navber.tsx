@@ -37,7 +37,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50">
       <div className="hidden bg-slate-900 text-slate-100 md:block">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-1 sm:px-4 lg:px-5">
           <nav className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
             {topCategories.map((item, index) => (
               <Link

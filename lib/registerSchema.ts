@@ -90,7 +90,7 @@ export const registerSchema = z.object({
     .trim()
     .min(2, "Name must be at least 2 characters")
     .max(80, "Name is too long"),
-  email: z.string().trim().toLowerCase().email("Enter a valid email address"),
+  email: z.string().trim().email("Enter a valid email address").transform((s) => s.toLowerCase()),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -102,8 +102,8 @@ export const registerSchema = z.object({
     .string()
     .trim()
     .regex(bdPhoneRegex, "Enter a valid BD number, e.g. +8801XXXXXXXXX"),
-  role: z.enum(ROLES, {
-    errorMap: () => ({ message: "Select tenant or landlord" }),
+  role: z.enum(["tenant", "landlord"], {
+    message: "Select tenant or landlord",
   }),
   divison: z.string().min(1, "Select a division"),
   district: z.string().min(1, "Select a district"),
@@ -131,11 +131,7 @@ export function toInternationalBdPhone(localPhone: string): string {
 }
 
 export const loginSchema = z.object({
-  phone: z
-    .string()
-    .trim()
-    .min(1, "Enter your mobile number")
-    .regex(bdLocalPhoneRegex, "Enter a valid 11-digit BD number, e.g. 01XXXXXXXXX"),
+  email: z.string().trim().email("Enter a valid email address").transform((s) => s.toLowerCase()),
   password: z.string().min(1, "Enter your password"),
   remember: z.boolean().optional(),
 });

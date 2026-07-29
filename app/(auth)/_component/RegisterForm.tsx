@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import { useRouter } from "next/navigation";
+
 import {
   User,
   Mail,
@@ -25,9 +27,11 @@ import {
   type Division,
 } from "@/lib/registerSchema";
 import StepProgress from "./Stepprogress";
+import { toast } from "react-toastify";
 
 interface RegisterFormProps {
-  onSubmit?: (data: RegisterFormData) => void | Promise<void>;
+  onSubmit?: (data: RegisterFormData) => void | Promise<unknown>;
+  action?: (data: RegisterFormData) => void | Promise<unknown>;
 }
 
 type DetailsState = {
@@ -61,7 +65,8 @@ const inputRowClass = (hasError?: string) =>
       : "border-neutral-300 focus-within:border-neutral-500"
   }`;
 
-export default function RegisterForm({ onSubmit }: RegisterFormProps) {
+export default function RegisterForm({ onSubmit, action }: RegisterFormProps) {
+  const router = useRouter();
   const [step, setStep] = useState(1);
 
   // Step 1 state
@@ -124,7 +129,29 @@ export default function RegisterForm({ onSubmit }: RegisterFormProps) {
     setErrors({});
     setSubmitting(true);
     try {
-      await onSubmit?.(payload);
+      const submitAction = action ?? onSubmit;
+      const result = await submitAction?.(payload);
+
+      if (
+        result &&
+        typeof result === "object" &&
+        "ok" in result &&
+        result.ok === false &&
+        "message" in result
+      ) {
+        toast.error(
+          typeof result.message === "string"
+            ? result.message
+            : "Registration failed. Please try again.",
+        );
+        return;
+      }
+
+      toast.success("Registration successful! Please log in.");
+      router.push("/login");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error("Registration failed. Please try again.");
     } finally {
       setSubmitting(false);
     }

@@ -3,6 +3,8 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import NavbarWrapper from "@/components/NavbarWrapper";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -41,6 +43,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <NavbarWrapper />
         {children}
+
+        <ToastContainer position="top-right" autoClose={4000} />
       </body>
     </html>
   );

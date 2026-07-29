@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { Phone, Lock, Eye, EyeOff } from "lucide-react";
+import { Phone, Lock, Eye, EyeOff, Mail } from "lucide-react";
 import { loginSchema, type LoginFormData } from "@/lib/registerSchema";
 
 interface AuthFormProps {
@@ -13,14 +13,14 @@ type LoginErrors = Partial<Record<keyof LoginFormData, string>>;
 export default function AuthForm({ onSubmit }: AuthFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
-  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = loginSchema.safeParse({ phone, password, remember });
+    const result = loginSchema.safeParse({ email, password, remember });
 
     if (!result.success) {
       const fieldErrors: LoginErrors = {};
@@ -36,6 +36,8 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
     setSubmitting(true);
     try {
       await onSubmit?.(result.data);
+
+      console.log(result.data);
     } finally {
       setSubmitting(false);
     }
@@ -51,29 +53,29 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
         {/* Phone field */}
         <div className="relative">
           <label className="absolute -top-2.5 left-4 bg-[#F7F1E8] px-1.5 text-sm text-neutral-500">
-            মোবাইল নম্বর
+            Email
           </label>
           <div
             className={`flex items-center gap-3 border rounded-lg px-4 py-3.5 bg-transparent transition-colors ${
-              errors.phone
+              errors.email
                 ? "border-red-400 focus-within:border-red-500"
                 : "border-neutral-300 focus-within:border-neutral-500"
             }`}
           >
-            <Phone size={18} className="text-neutral-400 shrink-0" />
+            <Mail size={18} className="text-neutral-400 shrink-0" />
             <input
               type="tel"
-              value={phone}
+              value={email}
               onChange={(e) => {
-                setPhone(e.target.value);
+                setEmail(e.target.value);
                 setErrors((prev) => ({ ...prev, phone: undefined }));
               }}
-              placeholder="01XXXXXXXXX"
+              placeholder="user@email.com"
               className="w-full bg-transparent outline-none text-neutral-700 placeholder:text-neutral-400"
             />
           </div>
-          {errors.phone && (
-            <p className="mt-1.5 text-xs text-red-500">{errors.phone}</p>
+          {errors.email && (
+            <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>
           )}
         </div>
 
