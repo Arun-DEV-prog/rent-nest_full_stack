@@ -25,5 +25,13 @@ export default function NavbarWrapper() {
     return null;
   }
 
+  // Hide navbar for landlord dashboard pages
+  if (
+    pathname === "/landlord-dashboard" ||
+    pathname.startsWith("/landlord-dashboard/")
+  ) {
+    return null;
+  }
+
   return <Navbar />;
 }

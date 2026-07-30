@@ -1,47 +1,35 @@
 "use client";
 
-import { useState, FormEvent } from "react";
-import { Phone, Lock, Eye, EyeOff, Mail } from "lucide-react";
+import { useState, useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Lock, Eye, EyeOff, Mail } from "lucide-react";
 import { loginSchema, type LoginFormData } from "@/lib/registerSchema";
-
-interface AuthFormProps {
-  onSubmit?: (data: LoginFormData) => void | Promise<void>;
-}
+import { loginAction } from "../_actions/authActions";
+import { toast } from "react-toastify";
 
 type LoginErrors = Partial<Record<keyof LoginFormData, string>>;
 
-export default function AuthForm({ onSubmit }: AuthFormProps) {
+export default function AuthForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
+
   const [errors, setErrors] = useState<LoginErrors>({});
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const result = loginSchema.safeParse({ email, password, remember });
+  const [state, action, pending] = useActionState(loginAction, false);
 
-    if (!result.success) {
-      const fieldErrors: LoginErrors = {};
-      for (const issue of result.error.issues) {
-        const key = issue.path[0] as keyof LoginFormData;
-        fieldErrors[key] = issue.message;
-      }
-      setErrors(fieldErrors);
-      return;
+  useEffect(() => {
+    if (!state) return;
+
+    if (state.success) {
+      toast.success(state.message || "Login successful");
+    } else {
+      toast.error(state.message || "Login failed");
     }
-
-    setErrors({});
-    setSubmitting(true);
-    try {
-      await onSubmit?.(result.data);
-
-      console.log(result.data);
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  }, [state]);
 
   return (
     <div className="w-full max-w-md mx-auto md:mx-0">
@@ -49,8 +37,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
         Welcome Back!!
       </h1>
 
-      <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-        {/* Phone field */}
+      <form action={action} className="space-y-6" noValidate>
         <div className="relative">
           <label className="absolute -top-2.5 left-4 bg-[#F7F1E8] px-1.5 text-sm text-neutral-500">
             Email
@@ -64,11 +51,12 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
           >
             <Mail size={18} className="text-neutral-400 shrink-0" />
             <input
-              type="tel"
+              name="email"
+              type="email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
-                setErrors((prev) => ({ ...prev, phone: undefined }));
+                setErrors((prev) => ({ ...prev, email: undefined }));
               }}
               placeholder="user@email.com"
               className="w-full bg-transparent outline-none text-neutral-700 placeholder:text-neutral-400"
@@ -93,6 +81,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
           >
             <Lock size={18} className="text-neutral-400 shrink-0" />
             <input
+              name="password"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => {
@@ -120,6 +109,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
+              name="remember"
               type="checkbox"
               checked={remember}
               onChange={(e) => setRemember(e.target.checked)}
@@ -135,7 +125,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
         {/* Submit */}
         <button
           type="submit"
-          disabled={submitting}
+          //disabled={submitting}
           className="w-full py-3.5 rounded-lg font-semibold text-neutral-900 transition-colors disabled:opacity-60"
           style={{ backgroundColor: "#E9C6A0" }}
           onMouseOver={(e) =>
@@ -145,7 +135,7 @@ export default function AuthForm({ onSubmit }: AuthFormProps) {
             (e.currentTarget.style.backgroundColor = "#E9C6A0")
           }
         >
-          {submitting ? "লগইন হচ্ছে..." : "লগইন"}
+          {pending ? "লগইন হচ্ছে..." : "লগইন"}
         </button>
 
         {/* Register link */}
