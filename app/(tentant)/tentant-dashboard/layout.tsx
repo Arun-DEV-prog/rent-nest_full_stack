@@ -1,0 +1,35 @@
+import React from "react";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { TenantSidebar } from "../_component/app-sidebar";
+import ProfileMenu from "../_component/profile-menu";
+
+export default function TenantDashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <SidebarProvider>
+      <TenantSidebar />
+      <SidebarInset className="bg-slate-50">
+        <div className="flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-5 shadow-sm">
+          <div>
+            <p className="text-sm text-slate-500">Tenant Dashboard</p>
+            <h1 className="text-2xl font-semibold text-slate-900">
+              Welcome back
+            </h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <ProfileMenu />
+            <SidebarTrigger className="rounded-full bg-slate-100 px-3 py-2 text-sm text-slate-700 hover:bg-slate-200" />
+          </div>
+        </div>
+        <div className="p-6">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
+  );
+}

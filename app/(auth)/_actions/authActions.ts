@@ -136,3 +136,11 @@ export const loginAction = async (
     message: res.data.message,
   };
 };
+
+
+export const logoutAction = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("accessToken");
+  redirect("/login");
+};
+

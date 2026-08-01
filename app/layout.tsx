@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
         {children}
 
         <ToastContainer position="top-right" autoClose={4000} />
+        <Toaster />
       </body>
     </html>
   );

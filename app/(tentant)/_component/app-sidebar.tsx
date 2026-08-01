@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Building2, User, MessageSquare } from "lucide-react";
+import { Home, Building2, User, ReceiptText } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -13,34 +13,28 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { label: "Overview", href: "/dashboard/landlord", icon: Home },
+  { label: "Overview", href: "/tentant-dashboard", icon: Home },
   {
-    label: "Properties",
-    href: "/landlord-dashboard/properties",
+    label: "My Properties",
+    href: "/tentant-dashboard/properties",
     icon: Building2,
-    subItems: [
-      { label: "Property list", href: "/landlord-dashboard/properties/list" },
-      {
-        label: "Create property",
-        href: "/landlord-dashboard/properties/new",
-      },
-    ],
   },
   {
-    label: "Requests",
-    href: "/landlord-dashboard/requests",
-    icon: MessageSquare,
+    label: "Profile",
+    href: "/tentant-dashboard/profile",
+    icon: User,
   },
-  { label: "Profile", href: "/dashboard/landlord/profile", icon: User },
+  {
+    label: "Payments",
+    href: "/tentant-dashboard/payments",
+    icon: ReceiptText,
+  },
 ];
 
-export function AppSidebar() {
+export function TenantSidebar() {
   const pathname = usePathname();
 
   return (
@@ -48,7 +42,7 @@ export function AppSidebar() {
       <SidebarHeader className="px-4 py-4">
         <div className="space-y-1">
           <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
-            Landlord
+            Tenant
           </p>
           <h2 className="text-lg font-semibold text-slate-900">Dashboard</h2>
         </div>
@@ -77,26 +71,6 @@ export function AppSidebar() {
                     }
                     isActive={isActive}
                   />
-
-                  {item.subItems ? (
-                    <SidebarMenuSub>
-                      {item.subItems.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.href}>
-                          <SidebarMenuSubButton
-                            render={
-                              <Link
-                                href={subItem.href}
-                                className="w-full text-left"
-                              >
-                                {subItem.label}
-                              </Link>
-                            }
-                            isActive={pathname === subItem.href}
-                          />
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  ) : null}
                 </SidebarMenuItem>
               );
             })}

@@ -1,3 +1,4 @@
+// app/landlord/page.tsx
 import { landlordProperties } from "../_actions/propertiesAction";
 import {
   Building2,
@@ -5,10 +6,10 @@ import {
   Bath,
   Ruler,
   MapPin,
-  Tag,
   CheckCircle,
   XCircle,
   Calendar,
+  TrendingUp,
 } from "lucide-react";
 
 export default async function LandlordPage() {
@@ -18,62 +19,84 @@ export default async function LandlordPage() {
   const totalProperties = properties.length;
   const available = properties.filter((p: any) => p.availability).length;
   const unavailable = totalProperties - available;
+  const totalRevenue = properties.reduce(
+    (sum: number, p: any) => sum + Number(p.rent),
+    0,
+  );
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-5">
-        <h1 className="text-2xl font-bold text-gray-900">My Properties</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Landlord Dashboard</h1>
         <p className="text-sm text-gray-500 mt-0.5">
-          Manage and monitor your listed properties
+          Overview of your properties and performance
         </p>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <StatCard
-            label="Total Properties"
-            value={totalProperties}
-            icon={<Building2 className="w-5 h-5 text-blue-600" />}
-            bg="bg-blue-50"
-          />
-          <StatCard
-            label="Available"
-            value={available}
-            icon={<CheckCircle className="w-5 h-5 text-green-600" />}
-            bg="bg-green-50"
-          />
-          <StatCard
-            label="Unavailable"
-            value={unavailable}
-            icon={<XCircle className="w-5 h-5 text-red-500" />}
-            bg="bg-red-50"
-          />
+        <div>
+          <h2 className="text-base font-semibold text-gray-700 mb-3">
+            Overview
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <StatCard
+              label="Total Properties"
+              value={totalProperties}
+              icon={<Building2 className="w-5 h-5 text-blue-600" />}
+              bg="bg-blue-50"
+            />
+            <StatCard
+              label="Available"
+              value={available}
+              icon={<CheckCircle className="w-5 h-5 text-green-600" />}
+              bg="bg-green-50"
+            />
+            <StatCard
+              label="Unavailable"
+              value={unavailable}
+              icon={<XCircle className="w-5 h-5 text-red-500" />}
+              bg="bg-red-50"
+            />
+            <StatCard
+              label="Total Rent/mo"
+              value={`৳${totalRevenue.toLocaleString()}`}
+              icon={<TrendingUp className="w-5 h-5 text-purple-600" />}
+              bg="bg-purple-50"
+              isText
+            />
+          </div>
         </div>
 
         {/* Property List */}
-        {!result.ok ? (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700 text-sm">
-            {result.message || "Failed to load properties."}
-          </div>
-        ) : properties.length === 0 ? (
-          <div className="bg-white border border-dashed border-gray-300 rounded-xl p-12 text-center">
-            <Building2 className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 font-medium">
-              No properties listed yet
-            </p>
-            <p className="text-gray-400 text-sm mt-1">
-              Add your first property to get started.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {properties.map((property: any) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
-        )}
+        <div>
+          <h2 className="text-base font-semibold text-gray-700 mb-3">
+            My Properties
+          </h2>
+
+          {!result.ok ? (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700 text-sm">
+              {result.message || "Failed to load properties."}
+            </div>
+          ) : properties.length === 0 ? (
+            <div className="bg-white border border-dashed border-gray-300 rounded-xl p-12 text-center">
+              <Building2 className="w-10 h-10 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 font-medium">
+                No properties listed yet
+              </p>
+              <p className="text-gray-400 text-sm mt-1">
+                Add your first property to get started.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {properties.map((property: any) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -84,17 +107,23 @@ function StatCard({
   value,
   icon,
   bg,
+  isText = false,
 }: {
   label: string;
-  value: number;
+  value: number | string;
   icon: React.ReactNode;
   bg: string;
+  isText?: boolean;
 }) {
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-5 flex items-center gap-4">
-      <div className={`${bg} p-3 rounded-lg`}>{icon}</div>
-      <div>
-        <p className="text-2xl font-bold text-gray-900">{value}</p>
+      <div className={`${bg} p-3 rounded-lg shrink-0`}>{icon}</div>
+      <div className="min-w-0">
+        <p
+          className={`font-bold text-gray-900 truncate ${isText ? "text-base" : "text-2xl"}`}
+        >
+          {value}
+        </p>
         <p className="text-sm text-gray-500">{label}</p>
       </div>
     </div>
