@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, Menu, Plus, Search, User, Grid, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -33,10 +33,23 @@ const mobileActions = [
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="hidden bg-slate-900 text-slate-100 md:block">
+      {/* Top bar — hides on scroll */}
+      <div
+        className={cn(
+          "hidden bg-slate-900 text-slate-100 md:block overflow-hidden transition-all duration-300 ease-in-out",
+          scrolled ? "max-h-0 opacity-0" : "max-h-16 opacity-100",
+        )}
+      >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-1 sm:px-4 lg:px-5">
           <nav className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
             {topCategories.map((item, index) => (
@@ -80,7 +93,13 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className="border-b border-slate-200 bg-white shadow-sm shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-950">
+      {/* Main nav — always visible */}
+      <div
+        className={cn(
+          "border-b border-slate-200 bg-white shadow-sm shadow-slate-900/5 dark:border-slate-800 dark:bg-slate-950 transition-shadow duration-300",
+          scrolled && "shadow-md",
+        )}
+      >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
           <Link
             href="/"
@@ -148,6 +167,7 @@ export default function Navbar() {
           </div>
         </div>
 
+        {/* Mobile menu */}
         <div
           className={cn(
             "overflow-hidden border-t border-slate-200 bg-slate-50 text-slate-950 transition-all duration-300 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-100 md:hidden",
