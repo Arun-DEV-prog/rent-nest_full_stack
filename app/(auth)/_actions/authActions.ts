@@ -16,15 +16,10 @@ export type LoginResult =
   | { ok: false; message: string };
 
 
-type LoginState={
-     success: true,
-    statusCode: number,
-    message: string,
-    data: {
-        accessToken: string,
-        refresToken: string
-    }
-}
+type LoginState = {
+  success: boolean;
+  message: string;
+};
 
 export async function registerAction(data: RegisterFormData) {
   try {
@@ -72,8 +67,8 @@ export async function registerAction(data: RegisterFormData) {
 
 export const loginAction = async (
   prevState: LoginState,
-  formData: FormData
-) => {
+  formData: FormData,
+): Promise<LoginState> => {
   let res;
   try {
     const payload = {
@@ -98,7 +93,7 @@ export const loginAction = async (
       sameSite: "lax",
     });
 
-    cookieStore.set("refreshToken", res.data.data.refreshToken, {
+    cookieStore.set("refresToken", res.data.data.refresToken, {
       httpOnly: true,
       maxAge: 60 * 60 * 7,
       sameSite: "lax",

@@ -9,6 +9,11 @@ import { toast } from "react-toastify";
 
 type LoginErrors = Partial<Record<keyof LoginFormData, string>>;
 
+type LoginState = {
+  success: boolean;
+  message: string;
+};
+
 export default function AuthForm() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -19,7 +24,10 @@ export default function AuthForm() {
 
   const [errors, setErrors] = useState<LoginErrors>({});
 
-  const [state, action, pending] = useActionState(loginAction, false);
+  const [state, action, pending] = useActionState<LoginState, FormData>(
+    loginAction,
+    { success: false, message: "" },
+  );
 
   useEffect(() => {
     if (!state) return;

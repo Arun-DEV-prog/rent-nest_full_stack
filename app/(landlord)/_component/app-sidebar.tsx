@@ -22,19 +22,19 @@ const navItems = [
   { label: "Overview", href: "/dashboard/landlord", icon: Home },
   {
     label: "Properties",
-    href: "/dashboard/landlord/properties",
+    href: "/landlord-dashboard/properties",
     icon: Building2,
     subItems: [
       { label: "Property list", href: "/dashboard/landlord/properties" },
       {
         label: "Create property",
-        href: "/dashboard/landlord/properties/new",
+        href: "/landlord-dashboard/properties/new",
       },
     ],
   },
   {
     label: "Requests",
-    href: "/dashboard/landlord/requests",
+    href: "/landlord-dashboard/requests",
     icon: MessageSquare,
   },
   { label: "Profile", href: "/dashboard/landlord/profile", icon: User },
