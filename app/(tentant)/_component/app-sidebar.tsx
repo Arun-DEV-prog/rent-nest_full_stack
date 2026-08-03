@@ -20,9 +20,9 @@ const navItems = [
   { label: "Overview", href: "/tentant-dashboard", icon: LayoutGrid },
 
   {
-    label: "My Properties",
-    href: "/tentant-dashboard/properties",
-    icon: Building2,
+    label: "Requests",
+    href: "/tentant-dashboard/requests",
+    icon: ReceiptText,
   },
   {
     label: "Profile",

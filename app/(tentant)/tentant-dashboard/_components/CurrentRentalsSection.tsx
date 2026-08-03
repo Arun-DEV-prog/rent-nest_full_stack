@@ -14,7 +14,9 @@ export default function CurrentRentalsSection({
 }: CurrentRentalsSectionProps) {
   return (
     <section>
-      <h2 className="mb-3 text-base font-semibold text-gray-700">Current Rentals</h2>
+      <h2 className="mb-3 text-base font-semibold text-gray-700">
+        Current Rentals
+      </h2>
       {!result.ok ? (
         <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
           {result.message}

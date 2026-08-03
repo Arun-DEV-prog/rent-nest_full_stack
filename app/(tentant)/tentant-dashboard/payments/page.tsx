@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { getTenantRentals } from "../_actions/tenantDashboardAction";
 
-export default function TenantPaymentsPage() {
+export default async function TenantPaymentsPage() {
+  const result = await getTenantRentals();
+  const rentals = result.data ?? [];
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="mx-auto max-w-6xl rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
@@ -17,11 +21,40 @@ export default function TenantPaymentsPage() {
           </Link>
         </div>
 
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-10 text-center">
-          <p className="text-lg font-semibold text-gray-900">Payment history will appear here.</p>
-          <p className="mt-2 text-sm text-gray-500">
-            This page is ready for invoices and payment records.
-          </p>
+        <div className="mt-8 space-y-4">
+          {!result.ok ? (
+            <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+              {result.message}
+            </div>
+          ) : rentals.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-sm text-gray-500">
+              No payment records available yet.
+            </div>
+          ) : (
+            rentals.map((rental) => (
+              <div
+                key={rental.id}
+                className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
+              >
+                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      {rental.properties.title}
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                      {rental.properties.address}
+                    </p>
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    <p className="font-semibold text-gray-800">
+                      ৳{Number(rental.properties.rent || 0).toLocaleString()}
+                    </p>
+                    <p>Status: {rental.status}</p>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

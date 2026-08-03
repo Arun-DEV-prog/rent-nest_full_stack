@@ -8,8 +8,9 @@ import {
   BadgeCheck,
 } from "lucide-react";
 
-export default async function TenantProfilePage() {
+export default async function ProfilePage() {
   const result = await getProfile();
+  console.log(result);
 
   if (!result.ok) {
     return (

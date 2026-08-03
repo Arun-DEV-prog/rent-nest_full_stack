@@ -30,7 +30,8 @@ export default function RequestHistorySection({
                     {request.properties.address}
                   </p>
                   <p className="mt-2 text-sm text-gray-600">
-                    Move-in: {request.move_in_date} • Lease: {request.lease_duration}
+                    Move-in: {request.move_in_date} • Lease:{" "}
+                    {request.lease_duration}
                   </p>
                 </div>
 
@@ -41,11 +42,14 @@ export default function RequestHistorySection({
                       ৳{Number(request.properties.rent || 0).toLocaleString()}
                     </p>
                     <p>
-                      {new Date(request.created_at).toLocaleDateString("en-GB", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                      })}
+                      {new Date(request.created_at).toLocaleDateString(
+                        "en-GB",
+                        {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        },
+                      )}
                     </p>
                   </div>
                 </div>

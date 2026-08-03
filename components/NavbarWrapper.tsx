@@ -38,6 +38,12 @@ export default function NavbarWrapper() {
   ) {
     return null;
   }
+  if (
+    pathname === "/admin-dashboard" ||
+    pathname.startsWith("/admin-dashboard")
+  ) {
+    return null;
+  }
 
   return <Navbar />;
 }

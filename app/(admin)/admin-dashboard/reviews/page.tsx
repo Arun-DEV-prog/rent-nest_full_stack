@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { getTenantRentals } from "../_actions/tenantDashboardAction";
+import { getAdminRentals } from "../../_actions/adminActions";
 
-export default async function TenantRequestsPage() {
-  const result = await getTenantRentals();
+export default async function AdminReviewsPage() {
+  const result = await getAdminRentals();
   const rentals = result.data ?? [];
 
   return (
@@ -10,11 +10,11 @@ export default async function TenantRequestsPage() {
       <div className="mx-auto max-w-6xl rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm text-slate-500">Tenant</p>
-            <h1 className="text-3xl font-semibold text-slate-900">Requests</h1>
+            <p className="text-sm text-slate-500">Admin</p>
+            <h1 className="text-3xl font-semibold text-slate-900">Reviews</h1>
           </div>
           <Link
-            href="/tentant-dashboard"
+            href="/admin-dashboard"
             className="inline-flex items-center rounded-full bg-[#123832] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0f2d25]"
           >
             Back to dashboard
@@ -28,7 +28,7 @@ export default async function TenantRequestsPage() {
             </div>
           ) : rentals.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-10 text-center text-sm text-gray-500">
-              No rental requests yet.
+              No rental reviews available.
             </div>
           ) : (
             rentals.map((rental) => (
@@ -36,7 +36,7 @@ export default async function TenantRequestsPage() {
                 key={rental.id}
                 className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
               >
-                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       {rental.properties.title}
@@ -44,14 +44,10 @@ export default async function TenantRequestsPage() {
                     <p className="text-sm text-gray-500">
                       {rental.properties.address}
                     </p>
-                    <p className="mt-2 text-sm text-gray-600">
-                      Move-in: {rental.move_in_date} • Lease:{" "}
-                      {rental.lease_duration}
-                    </p>
                   </div>
-
-                  <div className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700">
-                    {rental.status}
+                  <div className="text-sm text-gray-600">
+                    <p>Status: {rental.status}</p>
+                    <p>{rental.user.name}</p>
                   </div>
                 </div>
               </div>

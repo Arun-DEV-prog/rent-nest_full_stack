@@ -11,7 +11,7 @@ import {
 export default async function ProfilePage() {
   const result = await getProfile();
 
-  if (!result.ok || !result.user) {
+  if (!result.ok) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700 text-sm max-w-sm text-center">
@@ -71,7 +71,7 @@ export default async function ProfilePage() {
           <InfoRow
             icon={<MapPin className="w-4 h-4 text-gray-400" />}
             label="Location"
-            value={`${user.district}, ${user.divison}`}
+            value={[user.district, user.division].filter(Boolean).join(", ") || "—"}
           />
           <InfoRow
             icon={<ShieldCheck className="w-4 h-4 text-gray-400" />}

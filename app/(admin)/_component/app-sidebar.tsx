@@ -9,6 +9,7 @@ import {
   FileText,
   ShieldCheck,
   Users,
+  UserPlus,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,6 +25,11 @@ import {
 
 const navItems = [
   { label: "Overview", href: "/admin-dashboard", icon: BarChart3 },
+  {
+    label: "Recent Users",
+    href: "/admin-dashboard/recent-users",
+    icon: UserPlus,
+  },
   { label: "Landlords", href: "/admin-dashboard/landlords", icon: Building2 },
   { label: "Tenants", href: "/admin-dashboard/tenants", icon: Users },
   {
