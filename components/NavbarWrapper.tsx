@@ -33,8 +33,8 @@ export default function NavbarWrapper() {
     return null;
   }
   if (
-    pathname === "/tentant-dashboard" ||
-    pathname.startsWith("/tentant-dashboard")
+    pathname === "/tenant-dashboard" ||
+    pathname.startsWith("/tenant-dashboard")
   ) {
     return null;
   }

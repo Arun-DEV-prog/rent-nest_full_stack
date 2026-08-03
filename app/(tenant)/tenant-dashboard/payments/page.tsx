@@ -14,7 +14,7 @@ export default async function TenantPaymentsPage() {
             <h1 className="text-3xl font-semibold text-slate-900">Payments</h1>
           </div>
           <Link
-            href="/tentant-dashboard"
+            href="/tenant-dashboard"
             className="inline-flex items-center rounded-full bg-[#123832] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0f2d25]"
           >
             Back to dashboard

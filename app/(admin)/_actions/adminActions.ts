@@ -98,7 +98,7 @@ const fetchAdminUsers = async (page: number, headers: Record<string, string>) =>
     meta?: MetaData;
     message?: string;
   };
-  return { ok: true, data: data.data ?? [], meta: data.meta };
+  return { ok: true, data: data.data ?? [], meta: data.meta, message: data.message };
 };
 
 const fetchAdminRentals = async (page: number, headers: Record<string, string>) => {
@@ -109,7 +109,7 @@ const fetchAdminRentals = async (page: number, headers: Record<string, string>) 
     meta?: MetaData;
     message?: string;
   };
-  return { ok: true, data: data.data ?? [], meta: data.meta };
+  return { ok: true, data: data.data ?? [], meta: data.meta, message: data.message };
 };
 
 const fetchAdminProperties = async (page: number, headers: Record<string, string>) => {
@@ -120,7 +120,7 @@ const fetchAdminProperties = async (page: number, headers: Record<string, string
     meta?: MetaData;
     message?: string;
   };
-  return { ok: true, data: data.data ?? [], meta: data.meta };
+  return { ok: true, data: data.data ?? [], meta: data.meta, message: data.message };
 };
 
 const getAdminUsersCached = unstable_cache(

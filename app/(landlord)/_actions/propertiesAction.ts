@@ -1,7 +1,7 @@
 "use server"
 import axiosInstance from "@/lib/axios";
 import { PropertyFormData } from "@/lib/propertySchema";
-import { RentalRequest } from "@/lib/types/types";
+import type { RentalRequest } from "@/lib/types/types";
 import axios from "axios";
 import { revalidateTag, unstable_cache } from "next/cache";
 import { cookies } from "next/headers";

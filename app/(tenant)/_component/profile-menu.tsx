@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronDown, LogOut, Settings, UserCircle2 } from "lucide-react";
 
 const menuItems = [
-  { label: "Profile", href: "/tentant-dashboard/profile", icon: UserCircle2 },
+  { label: "Profile", href: "/tenant-dashboard/profile", icon: UserCircle2 },
   { label: "Settings", href: "/login", icon: Settings },
   { label: "Logout", href: "/login", icon: LogOut },
 ];

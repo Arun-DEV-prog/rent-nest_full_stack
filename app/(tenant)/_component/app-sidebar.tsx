@@ -17,21 +17,21 @@ import {
 
 const navItems = [
   { label: "Home", href: "/", icon: Home },
-  { label: "Overview", href: "/tentant-dashboard", icon: LayoutGrid },
+  { label: "Overview", href: "/tenant-dashboard", icon: LayoutGrid },
 
   {
     label: "Requests",
-    href: "/tentant-dashboard/requests",
+    href: "/tenant-dashboard/requests",
     icon: ReceiptText,
   },
   {
     label: "Profile",
-    href: "/tentant-dashboard/profile",
+    href: "/tenant-dashboard/profile",
     icon: User,
   },
   {
     label: "Payments",
-    href: "/tentant-dashboard/payments",
+    href: "/tenant-dashboard/payments",
     icon: ReceiptText,
   },
 ];

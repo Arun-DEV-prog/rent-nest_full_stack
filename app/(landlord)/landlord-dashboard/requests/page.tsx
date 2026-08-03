@@ -1,8 +1,5 @@
-// app/landlord/requests/page.tsx
-import {
-  landlordPropertiesRequest,
-  RentalRequest,
-} from "../../_actions/propertiesAction";
+import { landlordPropertiesRequest } from "../../_actions/propertiesAction";
+import type { RentalRequest } from "@/lib/types/types";
 
 import {
   BedDouble,

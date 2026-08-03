@@ -123,7 +123,7 @@ export const loginAction = async (
     const role = decodeToken?.role as string | undefined;
     console.log("role",role)
 
-    if (role === "tenant") return redirect("/tentant-dashboard");
+    if (role === "tenant") return redirect("/tenant-dashboard");
     if (role === "landlord") return redirect("/landlord-dashboard");
     if (role === "admin") return redirect("/admin-dashboard");
   } catch (err) {
