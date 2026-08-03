@@ -17,7 +17,7 @@ const topCategories = [
 
 const mainLinks = [
   { label: "Home", href: "/", active: true },
-  { label: "Property List", href: "/property-list", hasDropdown: true },
+  { label: "Property List", href: "/properties" },
   { label: "বাসা ভাড়া ম্যানেজমেন্ট", href: "/management" },
   { label: "About Us", href: "/about" },
   { label: "Contact Us", href: "/contact" },

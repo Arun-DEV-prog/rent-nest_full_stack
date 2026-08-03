@@ -1,22 +1,25 @@
-import PropertiesList from "./_component/PropertiesList";
-
-export const metadata = {
-  title: "Properties | Housio",
-};
+import { Suspense } from "react";
+import PropertiesList from "../properties/_component/PropertiesList";
 
 export default function PropertiesPage() {
   return (
-    <main className="min-h-screen bg-gray-50 py-12">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-slate-900">Properties</h1>
-          <p className="mt-2 text-sm text-slate-600">
-            Browse listings — demo data shown. Cards are reusable components.
-          </p>
-        </div>
-
-        <PropertiesList />
+    <section className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-slate-900">
+          Find your perfect property
+        </h1>
+        <p className="mt-2 text-sm text-slate-600">
+          Search by location, price range, bedrooms, and property type.
+        </p>
       </div>
-    </main>
+
+      <Suspense
+        fallback={
+          <div className="py-16 text-center text-slate-400">Loading…</div>
+        }
+      >
+        <PropertiesList />
+      </Suspense>
+    </section>
   );
 }

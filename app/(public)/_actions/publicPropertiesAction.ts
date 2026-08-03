@@ -1,8 +1,8 @@
 // app/_actions/publicPropertiesAction.ts
 "use server"
-import axiosInstance from "@/lib/axios";
 import axios from "axios";
 
+const BASE_URL = "https://rentnest-backend-six.vercel.app/api";
 
 export type PublicProperty = {
   id: string;
@@ -17,40 +17,77 @@ export type PublicProperty = {
   available_from: string;
   address: string;
   division: string;
-  images: string;
+  images: string | null;
   userId: string;
   categoriesId: number;
-  categories: { id: number; name: string };
+  categories: { id: number; name: string } | null;
 };
 
-export const getPublicProperties = async () => {
+export type PropertyFilters = {
+  keyword?: string;
+  location?: string | null;
+  type?: string | null;
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  bedrooms?: number | null;
+  availableNow?: boolean;
+  page?: number;
+  limit?: number;
+};
+
+export type MetaData = {
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
+};
+
+export const getPublicProperties = async (filters: PropertyFilters = {}) => {
   try {
-    const response = await axiosInstance.get("/api/properties");
+    // Build query params
+    const params = new URLSearchParams();
+
+    if (filters.keyword) params.set("search", filters.keyword);
+    if (filters.location) params.set("location", filters.location);
+    if (filters.type) params.set("type", filters.type);
+    if (filters.minPrice != null) params.set("minPrice", String(filters.minPrice));
+    if (filters.maxPrice != null) params.set("maxPrice", String(filters.maxPrice));
+    if (filters.bedrooms != null) params.set("bedrooms", String(filters.bedrooms));
+    if (filters.availableNow) params.set("availability", "true");
+    if (filters.page) params.set("page", String(filters.page));
+    params.set("limit", String(filters.limit ?? 6));
+
+    const url = `${BASE_URL}/properties?${params.toString()}`;
+
+    const response = await axios.get(url);
     const responseData = response.data as {
       success?: boolean;
       message?: string;
       data?: PublicProperty[];
+      meta?: MetaData;
     };
 
     if (!responseData.success) {
-      return { ok: false, message: responseData.message || "Failed to fetch properties." };
+      return { ok: false, message: responseData.message || "Failed to fetch properties.", properties: [], meta: undefined };
     }
 
-    return { ok: true, properties: responseData.data ?? [] };
+    return { ok: true, properties: responseData.data ?? [], meta: responseData.meta };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       return {
         ok: false,
         message: error.response?.data?.message || error.message || "Failed to fetch properties.",
+        properties: [],
+        meta: undefined,
       };
     }
-    return { ok: false, message: "Failed to fetch properties." };
+    return { ok: false, message: "Failed to fetch properties.", properties: [], meta: undefined };
   }
 };
 
 export const getPropertyById = async (id: string) => {
   try {
-    const response = await axiosInstance.get(`/api/properties/${id}`);
+    const response = await axios.get(`${BASE_URL}/properties/${id}`);
     const responseData = response.data as {
       success?: boolean;
       message?: string;
@@ -64,10 +101,7 @@ export const getPropertyById = async (id: string) => {
     return { ok: true, property: responseData.data };
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      return {
-        ok: false,
-        message: error.response?.data?.message || error.message || "Failed to fetch property.",
-      };
+      return { ok: false, message: error.response?.data?.message || "Failed to fetch property." };
     }
     return { ok: false, message: "Failed to fetch property." };
   }

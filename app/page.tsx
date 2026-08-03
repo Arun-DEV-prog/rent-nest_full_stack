@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <HomeText />
+      {/*<HomeText />*/}
       <PropertiesList />
       <About />
       <FAQ />

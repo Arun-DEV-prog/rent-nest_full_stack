@@ -2,9 +2,9 @@
 
 type Property = {
   id: string;
-  images: string | string[];
+  images: string | string[] | null;
   title: string;
-  categories?: { name: string };
+  categories?: { name: string } | null;
   rent: number | string;
   bedrooms: number | string;
   bathrooms: number | string;
@@ -22,16 +22,7 @@ type Property = {
 
 import Image from "next/image";
 import Link from "next/link";
-import {
-  MapPin,
-  Calendar,
-  Bed,
-  Droplet,
-  Ruler,
-  Check,
-  Heart,
-  Link2,
-} from "lucide-react";
+import { MapPin, Calendar, Check, Heart, Link2 } from "lucide-react";
 
 function getFirstImage(images: string | string[] | null | undefined) {
   if (Array.isArray(images)) {
@@ -67,7 +58,7 @@ export default function PropertyCard({ property }: { property: Property }) {
         />
 
         {/* Dark overlay at bottom */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
 
         {/* Featured / Deal Tag — top-left ribbon style */}
         {(property.featured || property.dealTag) && (

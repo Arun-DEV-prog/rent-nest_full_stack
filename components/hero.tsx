@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDown, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const slides = [
   {
@@ -27,13 +27,8 @@ const slides = [
   },
 ];
 
-const locations = ["Dhaka", "Chittagong", "Sylhet", "Khulna"];
-const propertyTypes = ["Property type", "Apartment", "Villa", "Flat", "Studio"];
-const tabs = ["Buy", "Rent", "Roommate"];
-
 export default function Hero() {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [activeTab, setActiveTab] = useState("Rent");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,14 +44,14 @@ export default function Hero() {
     setActiveSlide((current) => (current + 1) % slides.length);
 
   return (
-    <section className="relative overflow-hidden bg-slate-950 text-white">
+    <section className="relative overflow-hidden bg-slate-950 text-white mb-5">
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-700"
         style={{ backgroundImage: `url(${slides[activeSlide].image})` }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/20 to-slate-950/95" />
+      <div className="absolute inset-0 bg-linear-to-b from-slate-950/60 via-slate-950/20 to-slate-950/95" />
 
-      <div className="relative mx-auto flex min-h-[520px] max-w-[1400px] flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex min-h-130 max-w-350 flex-col items-center justify-center px-4 py-8 sm:px-6 lg:px-8">
         <div className="relative z-10 text-center">
           <p className="mb-4 text-xs uppercase tracking-[0.35em] text-emerald-300 sm:text-sm">
             Secure in the
@@ -70,63 +65,6 @@ export default function Hero() {
           <p className="mt-2 text-base text-slate-200 sm:text-xl">
             {slides[activeSlide].titleSuffix}
           </p>
-        </div>
-
-        <div className="mt-8 hidden w-full max-w-3xl rounded-[24px] border border-white/10 bg-slate-950/90 p-1 shadow-2xl shadow-slate-950/50 backdrop-blur-xl md:block">
-          <div className="rounded-[24px] bg-slate-950/95 p-4">
-            <div className="grid grid-cols-3 gap-2 rounded-[18px] border border-white/10 bg-slate-900/90 p-1">
-              {tabs.map((tab) => {
-                const isActive = tab === activeTab;
-                return (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => setActiveTab(tab)}
-                    className={
-                      isActive
-                        ? "rounded-[16px] bg-emerald-600 px-4 py-3 text-sm font-semibold text-white"
-                        : "rounded-[16px] bg-slate-950/90 px-4 py-3 text-sm font-semibold text-slate-200 transition hover:bg-slate-900"
-                    }
-                  >
-                    {tab}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-3 grid gap-2 rounded-[18px] border border-white/10 bg-white/95 p-3 shadow-sm text-slate-950 md:grid-cols-[1.2fr_1fr_auto]">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={locations[0]}
-                  readOnly
-                  className="h-12 w-full rounded-[14px] border border-slate-300 bg-white px-4 pr-12 text-sm text-slate-950 outline-none"
-                />
-                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
-              </div>
-              <div className="relative">
-                <select className="h-12 w-full appearance-none rounded-[14px] border border-slate-300 bg-white px-4 pr-12 text-sm text-slate-950 outline-none">
-                  {propertyTypes.map((option) => (
-                    <option
-                      key={option}
-                      value={option}
-                      className="bg-white text-slate-950"
-                    >
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-600" />
-              </div>
-              <button
-                type="button"
-                className="inline-flex h-12 items-center justify-center rounded-[14px] bg-emerald-600 px-4 text-sm font-semibold text-white transition hover:bg-emerald-500"
-              >
-                <Search className="mr-2 h-4 w-4" />
-                Search
-              </button>
-            </div>
-          </div>
         </div>
       </div>
 
