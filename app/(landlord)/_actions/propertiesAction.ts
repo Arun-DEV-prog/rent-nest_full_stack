@@ -3,19 +3,13 @@ import axiosInstance from "@/lib/axios";
 import { PropertyFormData } from "@/lib/propertySchema";
 import { RentalRequest } from "@/lib/types/types";
 import axios from "axios";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 
-export const landlordProperties = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+const LANDLORD_PROPERTIES_TAG = "landlord-properties";
+const LANDLORD_REQUESTS_TAG = "landlord-requests";
 
-  if (!token) {
-    return {
-      ok: false,
-      message: "You must be logged in to view properties.",
-    };
-  }
-
+const fetchLandlordProperties = async (token: string) => {
   try {
     const response = await axiosInstance.get("/api/landlord/my-properties", {
       headers: {
@@ -42,7 +36,7 @@ export const landlordProperties = async () => {
 
     return {
       ok: true,
-      properties: responseData.data,   // ✅ was `property: responseData.property`
+      properties: responseData.data,
       message: responseData.message,
     };
   } catch (error: unknown) {
@@ -69,17 +63,7 @@ export const landlordProperties = async () => {
   }
 };
 
-export const landlordPropertiesRequest = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
-
-  if (!token) {
-    return {
-      ok: false,
-      message: "You must be logged in to view rental requests.",
-    };
-  }
-
+const fetchLandlordRequests = async (token: string) => {
   try {
     const response = await axiosInstance.get("/api/landlord/requests", {
       headers: {
@@ -130,6 +114,52 @@ export const landlordPropertiesRequest = async () => {
   }
 };
 
+const getLandlordPropertiesCached = unstable_cache(
+  async (token: string) => fetchLandlordProperties(token),
+  [],
+  {
+    revalidate: 60,
+    tags: [LANDLORD_PROPERTIES_TAG],
+  }
+);
+
+const getLandlordRequestsCached = unstable_cache(
+  async (token: string) => fetchLandlordRequests(token),
+  [],
+  {
+    revalidate: 60,
+    tags: [LANDLORD_REQUESTS_TAG],
+  }
+);
+
+export const landlordProperties = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  if (!token) {
+    return {
+      ok: false,
+      message: "You must be logged in to view properties.",
+    };
+  }
+
+  return getLandlordPropertiesCached(token);
+};
+
+export const landlordPropertiesRequest = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  if (!token) {
+    return {
+      ok: false,
+      message: "You must be logged in to view rental requests.",
+    };
+  }
+
+  return getLandlordRequestsCached(token);
+};
+
 
 
 // _actions/rentalRequestAction.ts
@@ -170,6 +200,9 @@ export const updateRentalRequestStatus = async (
         message: responseData.message || "Failed to update request.",
       };
     }
+
+    revalidateTag(LANDLORD_REQUESTS_TAG, "default");
+    revalidateTag(LANDLORD_PROPERTIES_TAG, "default");
 
     return {
       ok: true,

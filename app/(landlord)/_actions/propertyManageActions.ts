@@ -4,6 +4,13 @@ import axiosInstance from "@/lib/axios";
 import { PropertyFormData } from "@/lib/propertySchema";
 import axios from "axios";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
+
+const invalidatePropertyCaches = () => {
+  revalidateTag("landlord-properties", "default");
+  revalidateTag("public-properties", "default");
+  revalidateTag("public-property", "default");
+};
 
 export const deleteProperty = async (propertyId: string) => {
   const cookieStore = await cookies();
@@ -23,6 +30,8 @@ export const deleteProperty = async (propertyId: string) => {
     if (!responseData.success) {
       return { ok: false, message: responseData.message || "Failed to delete property." };
     }
+
+    invalidatePropertyCaches();
 
     return { ok: true, message: responseData.message };
   } catch (error: unknown) {
@@ -61,6 +70,8 @@ export const updateProperty = async (propertyId: string, data: PropertyFormData)
     if (!responseData.success) {
       return { ok: false, message: responseData.message || "Failed to update property." };
     }
+
+    invalidatePropertyCaches();
 
     return { ok: true, message: responseData.message, property: responseData.data };
   } catch (error: unknown) {

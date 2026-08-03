@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Building2, User, ReceiptText } from "lucide-react";
+import { Home, Building2, User, ReceiptText, LayoutGrid } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +16,9 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { label: "Overview", href: "/tentant-dashboard", icon: Home },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Overview", href: "/tentant-dashboard", icon: LayoutGrid },
+
   {
     label: "My Properties",
     href: "/tentant-dashboard/properties",

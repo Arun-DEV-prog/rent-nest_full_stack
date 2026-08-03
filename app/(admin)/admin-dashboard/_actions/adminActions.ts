@@ -2,10 +2,14 @@
 "use server"
 import axiosInstance from "@/lib/axios";
 import axios from "axios";
+import { revalidateTag, unstable_cache } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // app/_actions/adminActions.t
+const ADMIN_USERS_TAG = "admin-users";
+const ADMIN_RENTALS_TAG = "admin-rentals";
+const ADMIN_PROPERTIES_TAG = "admin-properties";
 
 const getAuthHeader = async () => {
   const cookieStore = await cookies();
@@ -72,14 +76,46 @@ export type MetaData = {
   pages: number;
 };
 
+const fetchAdminUsers = async (headers: Record<string, string>) => {
+  const response = await axiosInstance.get(`/api/admin/users`, { headers });
+  const data = response.data as { success?: boolean; data?: AdminUser[]; meta?: MetaData; message?: string };
+  return { ok: true, data: data.data ?? [], meta: data.meta };
+};
+
+const fetchAdminRentals = async (headers: Record<string, string>) => {
+  const response = await axiosInstance.get(`api/admin/rentals?`, { headers });
+  const data = response.data as { success?: boolean; data?: AdminRental[]; meta?: MetaData; message?: string };
+  return { ok: true, data: data.data ?? [], meta: data.meta };
+};
+
+const fetchAdminProperties = async (headers: Record<string, string>) => {
+  const response = await axiosInstance.get(`/api/admin/properties`, { headers });
+  const data = response.data as { success?: boolean; data?: AdminProperty[]; meta?: MetaData; message?: string };
+  return { ok: true, data: data.data ?? [], meta: data.meta };
+};
+
+const getAdminUsersCached = unstable_cache(
+  async (headers: Record<string, string>) => fetchAdminUsers(headers),
+  [],
+  { revalidate: 60, tags: [ADMIN_USERS_TAG] }
+);
+
+const getAdminRentalsCached = unstable_cache(
+  async (headers: Record<string, string>) => fetchAdminRentals(headers),
+  [],
+  { revalidate: 60, tags: [ADMIN_RENTALS_TAG] }
+);
+
+const getAdminPropertiesCached = unstable_cache(
+  async (headers: Record<string, string>) => fetchAdminProperties(headers),
+  [],
+  { revalidate: 60, tags: [ADMIN_PROPERTIES_TAG] }
+);
+
 export const getAdminUsers = async () => {
   try {
     const headers = await getAuthHeader();
-    const response = await axiosInstance.get(`/api/admin/users`, { headers });
-     
-    const data = response.data as { success?: boolean; data?: AdminUser[]; meta?: MetaData; message?: string };
-    console.log(data)
-    return { ok: true, data: data.data ?? [], meta: data.meta };
+    return await getAdminUsersCached(headers);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) redirect("/login");
@@ -92,9 +128,7 @@ export const getAdminUsers = async () => {
 export const getAdminRentals = async () => {
   try {
     const headers = await getAuthHeader();
-    const response = await axiosInstance.get(`api/admin/rentals?`, { headers });
-    const data = response.data as { success?: boolean; data?: AdminRental[]; meta?: MetaData; message?: string };
-    return { ok: true, data: data.data ?? [], meta: data.meta };
+    return await getAdminRentalsCached(headers);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) redirect("/login");
@@ -107,9 +141,7 @@ export const getAdminRentals = async () => {
 export const getAdminProperties = async () => {
   try {
     const headers = await getAuthHeader();
-    const response = await axiosInstance.get(`/api/admin/properties`, { headers });
-    const data = response.data as { success?: boolean; data?: AdminProperty[]; meta?: MetaData; message?: string };
-    return { ok: true, data: data.data ?? [], meta: data.meta };
+    return await getAdminPropertiesCached(headers);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) redirect("/login");
@@ -128,6 +160,7 @@ export const updateUserStatus = async (userId: string, status: "active" | "block
       { headers },
     );
     const data = response.data as { success?: boolean; message?: string };
+    revalidateTag(ADMIN_USERS_TAG, "default");
     return { ok: data.success ?? false, message: data.message };
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -152,6 +185,7 @@ export const updateRentalStatus = async (
       { headers },
     );
     const data = response.data as { success?: boolean; message?: string };
+    revalidateTag(ADMIN_RENTALS_TAG, "default");
     return { ok: data.success ?? false, message: data.message };
   } catch (error) {
     if (axios.isAxiosError(error)) {

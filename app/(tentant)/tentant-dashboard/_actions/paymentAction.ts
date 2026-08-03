@@ -3,6 +3,7 @@ import axiosInstance from "@/lib/axios";
 import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
 
 export const createPaymentCheckout = async (propertyId: string) => {
   const cookieStore = await cookies();
@@ -72,6 +73,12 @@ export const verifyPayment = async (sessionId: string, rentalId: string) => {
       message?: string;
       data?: Record<string, unknown>;
     };
+
+    if (responseData.success) {
+      revalidateTag("tenant-rentals", "default");
+      revalidateTag("public-properties", "default");
+      revalidateTag("public-property", "default");
+    }
 
     return {
       ok: responseData.success ?? false,

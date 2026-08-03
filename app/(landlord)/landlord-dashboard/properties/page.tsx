@@ -1,6 +1,11 @@
 import Link from "next/link";
+import { landlordProperties } from "../../_actions/propertiesAction";
+import PropertiesClient from "../../_component/PropertiesClient";
 
-export default function LandlordPropertyListPage() {
+export default async function LandlordPropertyListPage() {
+  const result = await landlordProperties();
+  const properties = result.ok ? (result.properties ?? []) : [];
+
   return (
     <div className="space-y-6">
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
@@ -20,12 +25,22 @@ export default function LandlordPropertyListPage() {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-slate-500">
-          The property list page is ready. Add your property and it will show
-          here.
-        </p>
-      </div>
+      {!result.ok ? (
+        <div className="rounded-3xl border border-red-200 bg-red-50 p-8 text-sm text-red-700 shadow-sm">
+          {result.message || "Failed to load properties."}
+        </div>
+      ) : properties.length === 0 ? (
+        <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center shadow-sm">
+          <p className="text-lg font-semibold text-slate-900">
+            No properties yet
+          </p>
+          <p className="mt-2 text-sm text-slate-500">
+            Add your first property to see it appear here.
+          </p>
+        </div>
+      ) : (
+        <PropertiesClient properties={properties} />
+      )}
     </div>
   );
 }

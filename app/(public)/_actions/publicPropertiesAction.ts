@@ -1,6 +1,7 @@
 // app/_actions/publicPropertiesAction.ts
 "use server"
 import axios from "axios";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 const BASE_URL = "https://rentnest-backend-six.vercel.app/api";
 
@@ -42,9 +43,11 @@ export type MetaData = {
   pages: number;
 };
 
-export const getPublicProperties = async (filters: PropertyFilters = {}) => {
+const PUBLIC_PROPERTIES_TAG = "public-properties";
+const PUBLIC_PROPERTY_TAG = "public-property";
+
+const fetchPublicProperties = async (filters: PropertyFilters = {}) => {
   try {
-    // Build query params
     const params = new URLSearchParams();
 
     if (filters.keyword) params.set("search", filters.keyword);
@@ -54,7 +57,7 @@ export const getPublicProperties = async (filters: PropertyFilters = {}) => {
     if (filters.maxPrice != null) params.set("maxPrice", String(filters.maxPrice));
     if (filters.bedrooms != null) params.set("bedrooms", String(filters.bedrooms));
     if (filters.availableNow) params.set("availability", "true");
-    if (filters.page) params.set("page", String(filters.page));
+    if (filters.page != null) params.set("page", String(filters.page));
     params.set("limit", String(filters.limit ?? 6));
 
     const url = `${BASE_URL}/properties?${params.toString()}`;
@@ -85,7 +88,7 @@ export const getPublicProperties = async (filters: PropertyFilters = {}) => {
   }
 };
 
-export const getPropertyById = async (id: string) => {
+const fetchPropertyById = async (id: string) => {
   try {
     const response = await axios.get(`${BASE_URL}/properties/${id}`);
     const responseData = response.data as {
@@ -105,4 +108,27 @@ export const getPropertyById = async (id: string) => {
     }
     return { ok: false, message: "Failed to fetch property." };
   }
+};
+
+export const getPublicProperties = unstable_cache(
+  async (filters: PropertyFilters = {}) => fetchPublicProperties(filters),
+  [],
+  {
+    revalidate: 60,
+    tags: [PUBLIC_PROPERTIES_TAG],
+  }
+);
+
+export const getPropertyById = unstable_cache(
+  async (id: string) => fetchPropertyById(id),
+  [],
+  {
+    revalidate: 300,
+    tags: [PUBLIC_PROPERTY_TAG],
+  }
+);
+
+export const revalidatePublicProperties = async () => {
+  revalidateTag(PUBLIC_PROPERTIES_TAG, "default");
+  revalidateTag(PUBLIC_PROPERTY_TAG, "default");
 };

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Building2, User, MessageSquare } from "lucide-react";
+import { Home, Building2, User, MessageSquare, LayoutGrid } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,13 +19,13 @@ import {
 } from "@/components/ui/sidebar";
 
 const navItems = [
-  { label: "Overview", href: "/dashboard/landlord", icon: Home },
+  { label: "Home", href: "/", icon: Home },
+  { label: "Overview", href: "/landlord-dashboard", icon: LayoutGrid },
   {
     label: "Properties",
     href: "/landlord-dashboard/properties",
     icon: Building2,
     subItems: [
-      { label: "Property list", href: "/landlord-dashboard/properties/list" },
       {
         label: "Create property",
         href: "/landlord-dashboard/properties/new",
@@ -37,7 +37,7 @@ const navItems = [
     href: "/landlord-dashboard/requests",
     icon: MessageSquare,
   },
-  { label: "Profile", href: "/dashboard/landlord/profile", icon: User },
+  { label: "Profile", href: "/landlord-dashboard/profile", icon: User },
 ];
 
 export function AppSidebar() {

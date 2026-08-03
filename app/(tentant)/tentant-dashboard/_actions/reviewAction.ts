@@ -4,6 +4,7 @@ import axiosInstance from "@/lib/axios";
 import axios from "axios";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { revalidateTag } from "next/cache";
 
 export const submitReview = async (data: {
   propertyId: string;
@@ -30,6 +31,10 @@ export const submitReview = async (data: {
     if (!responseData.success) {
       return { ok: false, message: responseData.message || "Failed to submit review." };
     }
+
+    revalidateTag("tenant-rentals", "default");
+    revalidateTag("public-properties", "default");
+    revalidateTag("public-property", "default");
 
     return { ok: true, message: responseData.message };
   } catch (error: unknown) {

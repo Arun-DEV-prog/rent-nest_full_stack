@@ -3,6 +3,7 @@
 import axiosInstance from "@/lib/axios";
 import axios from "axios";
 import { cookies } from "next/headers";
+import { revalidateTag, unstable_cache } from "next/cache";
 
 export type UserProfile = {
   id: string;
@@ -15,14 +16,9 @@ export type UserProfile = {
   district: string;
 };
 
-export const getProfile = async () => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+const PROFILE_TAG = "profile";
 
-  if (!token) {
-    return { ok: false, message: "You must be logged in." };
-  }
-
+const fetchProfile = async (token: string) => {
   try {
     const response = await axiosInstance.get("/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
@@ -51,4 +47,28 @@ export const getProfile = async () => {
     }
     return { ok: false, message: "Failed to fetch profile." };
   }
+};
+
+const getProfileCached = unstable_cache(
+  async (token: string) => fetchProfile(token),
+  [],
+  {
+    revalidate: 300,
+    tags: [PROFILE_TAG],
+  }
+);
+
+export const getProfile = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  if (!token) {
+    return { ok: false, message: "You must be logged in." };
+  }
+
+  return getProfileCached(token);
+};
+
+export const revalidateProfile = async () => {
+  revalidateTag(PROFILE_TAG, "default");
 };
