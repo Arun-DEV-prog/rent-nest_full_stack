@@ -32,6 +32,12 @@ export default function NavbarWrapper() {
   ) {
     return null;
   }
+  if (
+    pathname === "/tentant-dashboard" ||
+    pathname.startsWith("/tentant-dashboard")
+  ) {
+    return null;
+  }
 
   return <Navbar />;
 }
