@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Filters = {
   keyword?: string;
@@ -27,6 +27,10 @@ export default function FilterBar({
   onClose?: () => void;
 }) {
   const [local, setLocal] = useState<Filters>(value || {});
+
+  useEffect(() => {
+    setLocal(value || {});
+  }, [value]);
 
   function reset() {
     const empty: Filters = {

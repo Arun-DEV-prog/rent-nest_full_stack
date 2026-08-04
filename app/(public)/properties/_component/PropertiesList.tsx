@@ -1,7 +1,7 @@
 // components/PropertiesList.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   getPublicProperties,
@@ -126,6 +126,17 @@ export default function PropertiesList() {
     };
   }, []);
 
+  // Guard ref: when true, the URL-push effect will skip to avoid a loop.
+  const skipUrlPushRef = useRef(false);
+
+  // Sync state whenever URL search parameters change
+  // (e.g. top navbar category pills, or external navigation).
+  useEffect(() => {
+    skipUrlPushRef.current = true;
+    setFilters(filtersFromSearchParams(searchParams));
+    setCurrentPage(Number(searchParams.get("page") ?? 1));
+  }, [searchParams]);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -141,9 +152,15 @@ export default function PropertiesList() {
     };
   }, [currentPage, filters, fetchProperties]);
 
-  // Keep the URL in sync whenever filters/page change from within this page
+  // Keep the URL in sync whenever filters/page change from internal UI
   // (sidebar edits, sort, pagination) so refresh/back-button/share links work.
+  // Skip when the change came from searchParams sync to avoid infinite loop.
   useEffect(() => {
+    if (skipUrlPushRef.current) {
+      skipUrlPushRef.current = false;
+      return;
+    }
+
     const params = new URLSearchParams();
     if (filters.keyword) params.set("search", filters.keyword);
     if (filters.city) params.set("location", filters.city);
