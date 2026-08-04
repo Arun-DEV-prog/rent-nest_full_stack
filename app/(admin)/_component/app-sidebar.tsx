@@ -62,7 +62,9 @@ export function AppSidebar() {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                pathname === item.href || pathname.startsWith(item.href + "/");
+                item.href === "/admin-dashboard"
+                  ? pathname === "/admin-dashboard"
+                  : pathname === item.href || pathname.startsWith(item.href + "/");
 
               return (
                 <SidebarMenuItem key={item.href}>

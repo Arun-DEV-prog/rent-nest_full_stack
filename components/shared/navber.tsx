@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
-import { ChevronDown, Menu, Plus, Search, User, Grid, X, LayoutDashboard } from "lucide-react";
+import {
+  ChevronDown,
+  Menu,
+  User,
+  Grid,
+  X,
+  LayoutDashboard,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getProfile, UserProfile } from "@/app/(auth)/_actions/profileAction";
 
@@ -24,14 +31,18 @@ function getCategoryHref(type: string | null): string {
   return `/properties?type=${encodeURIComponent(type)}`;
 }
 
-const mainLinks = [
+interface MainLink {
+  label: string;
+  href: string;
+  active?: boolean;
+  hasDropdown?: boolean;
+}
+
+const mainLinks: MainLink[] = [
   { label: "Home", href: "/", active: true },
   { label: "Property List", href: "/properties" },
-  { label: "বাসা ভাড়া ম্যানেজমেন্ট", href: "/management" },
   { label: "About Us", href: "/about" },
-  { label: "Contact Us", href: "/contact" },
-  { label: "Others", href: "/others", hasDropdown: true },
-  { label: "News", href: "/news" },
+  { label: "Contact Us", href: "/about" },
 ];
 
 function getDashboardUrl(role?: string) {
@@ -50,7 +61,8 @@ export default function Navbar() {
   // Determine the active category from URL
   const activeType = searchParams.get("type") ?? null;
   // A category pill is active if we are on /properties AND the type matches
-  const onPropertiesPage = pathname === "/properties" || pathname.startsWith("/properties");
+  const onPropertiesPage =
+    pathname === "/properties" || pathname.startsWith("/properties");
   const activeCategoryType = onPropertiesPage ? activeType : "__none__";
 
   useEffect(() => {
@@ -111,20 +123,6 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/add-property"
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-slate-100"
-            >
-              <Plus className="h-4 w-4" />
-              Add Property
-            </Link>
-            <Link
-              href="/search"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-slate-900 text-slate-100 transition hover:bg-slate-800"
-              aria-label="Search"
-            >
-              <Search className="h-5 w-5" />
-            </Link>
             {user ? (
               <Link
                 href={dashboardHref}
@@ -189,20 +187,17 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2 md:hidden">
-            <button
-              type="button"
-              aria-label="Search"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-700"
-            >
-              <Search className="h-5 w-5" />
-            </button>
             <Link
               href={dashboardHref}
               className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-700"
               aria-label={user ? "Dashboard" : "Login"}
               title={user ? "Dashboard" : "Login"}
             >
-              {user ? <LayoutDashboard className="h-5 w-5" /> : <User className="h-5 w-5" />}
+              {user ? (
+                <LayoutDashboard className="h-5 w-5" />
+              ) : (
+                <User className="h-5 w-5" />
+              )}
             </Link>
             <button
               type="button"
@@ -269,29 +264,33 @@ export default function Navbar() {
             </div>
 
             <div className="flex flex-col gap-3">
-              <Link
+              {/*<Link
                 href="/add-property"
                 onClick={() => setMobileOpen(false)}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
               >
                 <Plus className="h-4 w-4" />
                 Add Property
-              </Link>
+              </Link>*/}
               <div className="grid gap-2 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                <Link
+                {/*<Link
                   href="/search"
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   <Search className="h-5 w-5" />
                   Search
-                </Link>
+                </Link>*/}
                 <Link
                   href={dashboardHref}
                   onClick={() => setMobileOpen(false)}
                   className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
-                  {user ? <LayoutDashboard className="h-5 w-5 text-emerald-600" /> : <User className="h-5 w-5" />}
+                  {user ? (
+                    <LayoutDashboard className="h-5 w-5 text-emerald-600" />
+                  ) : (
+                    <User className="h-5 w-5" />
+                  )}
                   {user ? "Dashboard" : "Login"}
                 </Link>
                 <Link

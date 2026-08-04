@@ -57,7 +57,11 @@ export function TenantSidebar() {
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive =
-                pathname === item.href || pathname.startsWith(item.href + "/");
+                item.href === "/"
+                  ? pathname === "/"
+                  : item.href === "/tenant-dashboard"
+                    ? pathname === "/tenant-dashboard"
+                    : pathname === item.href || pathname.startsWith(item.href + "/");
 
               return (
                 <SidebarMenuItem key={item.href}>

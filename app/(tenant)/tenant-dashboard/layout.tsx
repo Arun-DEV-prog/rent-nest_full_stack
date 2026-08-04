@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import { TenantSidebar } from "../_component/app-sidebar";
 import ProfileMenu from "../_component/profile-menu";
+import DashboardFooter from "@/components/shared/DashboardFooter";
 
 export default function TenantDashboardLayout({
   children,
@@ -15,12 +16,12 @@ export default function TenantDashboardLayout({
   return (
     <SidebarProvider>
       <TenantSidebar />
-      <SidebarInset className="bg-slate-50">
+      <SidebarInset className="bg-slate-50 flex flex-col min-h-screen">
         <div className="flex items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-5 shadow-sm">
           <div>
-            <p className="text-sm text-slate-500">Tenant Dashboard</p>
-            <h1 className="text-2xl font-semibold text-slate-900">
-              Welcome back
+            <p className="text-sm text-slate-500 font-medium">Tenant Workspace</p>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Tenant Dashboard
             </h1>
           </div>
           <div className="flex items-center gap-3">
@@ -28,7 +29,8 @@ export default function TenantDashboardLayout({
             <SidebarTrigger className="rounded-full bg-slate-100 px-3 py-2 text-sm text-slate-700 hover:bg-slate-200" />
           </div>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 flex-1">{children}</div>
+        <DashboardFooter />
       </SidebarInset>
     </SidebarProvider>
   );

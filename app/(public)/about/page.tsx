@@ -5,7 +5,6 @@ import HeroSection from "@/components/sections/HeroSection";
 import CTASection from "@/components/sections/CTASection";
 import AboutContentSection from "@/components/sections/AboutContentSection";
 import TenantManagementSection from "@/components/sections/TenantManagementSection";
-import Footer from "@/components/footer";
 
 export default function AboutPage() {
   return (
@@ -54,8 +53,6 @@ export default function AboutPage() {
           { icon: "💬", title: "SMS ও tenant communication tools" },
         ]}
       />
-
-      <Footer />
     </>
   );
 }

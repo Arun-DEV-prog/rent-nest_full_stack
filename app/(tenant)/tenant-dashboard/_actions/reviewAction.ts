@@ -32,9 +32,9 @@ export const submitReview = async (data: {
       return { ok: false, message: responseData.message || "Failed to submit review." };
     }
 
-    revalidateTag("tenant-rentals");
-    revalidateTag("public-properties");
-    revalidateTag("public-property");
+    revalidateTag("tenant-rentals", "default");
+    revalidateTag("public-properties", "default");
+    revalidateTag("public-property", "default");
 
     return { ok: true, message: responseData.message };
   } catch (error: unknown) {

@@ -37,17 +37,8 @@ export default async function AdminDashboardPage() {
   const availableProperties = properties.filter((p) => p.availability).length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-5">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Platform overview and management
-        </p>
-      </div>
-
-      <div className="mx-auto max-w-7xl space-y-8 px-6 py-8">
-        <PlatformOverviewCards
+    <div className="mx-auto max-w-7xl space-y-8">
+      <PlatformOverviewCards
           totalUsers={totalUsers}
           totalProperties={totalProperties}
           totalRentals={totalRentals}
@@ -70,7 +61,6 @@ export default async function AdminDashboardPage() {
         />
 
         <RentalStatusBreakdown rentals={rentals} />
-      </div>
     </div>
   );
 }

@@ -90,11 +90,19 @@ export default function Hero() {
 
   // Search state
   const [filters, setFilters] = useState<HeroFilters>(EMPTY_FILTERS);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
-  const particles = useMemo(
-    () =>
+  const [particles, setParticles] = useState<{
+    id: number;
+    size: number;
+    left: number;
+    top: number;
+    delay: number;
+    duration: number;
+  }[]>([]);
+
+  useEffect(() => {
+    setParticles(
       Array.from({ length: 18 }, (_, i) => ({
         id: i,
         size: 2 + Math.random() * 4,
@@ -102,9 +110,9 @@ export default function Hero() {
         top: Math.random() * 100,
         delay: Math.random() * 4,
         duration: 5 + Math.random() * 6,
-      })),
-    []
-  );
+      }))
+    );
+  }, []);
 
   const goToSlide = useCallback(
     (nextIdx: number) => {
@@ -132,24 +140,8 @@ export default function Hero() {
 
   const currentSlide = slides[activeSlide];
 
-  // Count active advanced filters
-  const activeFilterCount = [
-    filters.type,
-    filters.location,
-    filters.minPrice,
-    filters.maxPrice,
-    filters.bedrooms,
-  ].filter(Boolean).length;
-
-  const hasAnyFilter =
-    filters.keyword || activeFilterCount > 0;
-
   function setFilter<K extends keyof HeroFilters>(key: K, value: HeroFilters[K]) {
     setFilters((prev) => ({ ...prev, [key]: value }));
-  }
-
-  function clearFilters() {
-    setFilters(EMPTY_FILTERS);
   }
 
   // Build the URL params matching PropertiesList's filtersFromSearchParams()
@@ -300,9 +292,9 @@ export default function Hero() {
             }}
           >
             {/* ── Main search row ── */}
-            <div className="flex items-center gap-0">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-0">
               {/* Keyword input */}
-              <div className="flex flex-1 items-center gap-3 px-5 py-4">
+              <div className="flex flex-1 items-center gap-3 px-5 py-4 border-b border-white/10 sm:border-b-0">
                 <Search className="h-5 w-5 flex-shrink-0 text-white/40" />
                 <input
                   type="text"
@@ -311,7 +303,7 @@ export default function Hero() {
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
                   placeholder="Search by title or address…"
-                  className="flex-1 bg-transparent text-sm text-white placeholder:text-white/35 focus:outline-none"
+                  className="flex-1 bg-transparent text-sm text-white placeholder:text-white/35 focus:outline-none min-w-0"
                 />
                 {filters.keyword && (
                   <button
@@ -325,17 +317,17 @@ export default function Hero() {
               </div>
 
               {/* Divider */}
-              <div className="h-8 w-px bg-white/10 flex-shrink-0" />
+              <div className="hidden sm:block h-8 w-px bg-white/10 flex-shrink-0" />
 
               {/* Location dropdown */}
-              <div className="relative flex items-center gap-2 px-4 py-4 min-w-[140px]">
+              <div className="relative flex items-center gap-2 px-5 sm:px-4 py-4 min-w-[140px] border-b border-white/10 sm:border-b-0">
                 <MapPin className="h-4 w-4 flex-shrink-0 text-white/40" />
                 <select
                   value={filters.location}
                   onChange={(e) => setFilter("location", e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
-                  className="flex-1 bg-transparent text-sm text-white focus:outline-none cursor-pointer appearance-none pr-2"
+                  className="flex-1 bg-transparent text-sm text-white focus:outline-none cursor-pointer appearance-none pr-2 min-w-0"
                   style={{ WebkitAppearance: "none" }}
                 >
                   <option value="" className="bg-slate-900">Any Location</option>
@@ -348,35 +340,12 @@ export default function Hero() {
                 <ChevronDown className="h-3.5 w-3.5 text-white/30 flex-shrink-0 pointer-events-none" />
               </div>
 
-              {/* Divider */}
-              <div className="h-8 w-px bg-white/10 flex-shrink-0" />
 
-              {/* Advanced toggle */}
-              <button
-                type="button"
-                onClick={() => setShowAdvanced((v) => !v)}
-                className="flex items-center gap-2 px-4 py-4 text-sm transition-colors duration-200 hover:text-white"
-                style={{ color: showAdvanced ? currentSlide.accent : "rgba(255,255,255,0.55)" }}
-              >
-                <SlidersHorizontal className="h-4 w-4" />
-                <span className="hidden sm:inline font-medium">Filters</span>
-                {activeFilterCount > 0 && (
-                  <span
-                    className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold text-white"
-                    style={{ background: currentSlide.accent }}
-                  >
-                    {activeFilterCount}
-                  </span>
-                )}
-              </button>
-
-              {/* Divider */}
-              <div className="h-8 w-px bg-white/10 flex-shrink-0" />
 
               {/* Search button */}
               <button
                 type="submit"
-                className="m-2 flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:brightness-110 active:scale-95 flex-shrink-0"
+                className="m-3 sm:m-2 flex items-center justify-center gap-2 rounded-xl px-6 py-3 sm:py-3 text-sm font-bold text-white transition-all duration-200 hover:brightness-110 active:scale-95 flex-shrink-0 w-auto"
                 style={{ background: currentSlide.accent }}
               >
                 <Search className="h-4 w-4" />
@@ -384,119 +353,7 @@ export default function Hero() {
               </button>
             </div>
 
-            {/* ── Advanced filters panel ── */}
-            <div
-              className="overflow-hidden transition-all duration-400 ease-in-out"
-              style={{
-                maxHeight: showAdvanced ? "300px" : "0px",
-                opacity: showAdvanced ? 1 : 0,
-              }}
-            >
-              <div className="border-t border-white/8 px-5 py-4">
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  {/* Property type */}
-                  <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/40">
-                      <Home className="h-3 w-3" />
-                      Property Type
-                    </label>
-                    <div className="relative">
-                      <select
-                        value={filters.type}
-                        onChange={(e) => setFilter("type", e.target.value)}
-                        className="h-10 w-full appearance-none rounded-xl border border-white/10 bg-white/8 px-3 pr-8 text-sm text-white focus:outline-none focus:border-white/30 transition cursor-pointer"
-                      >
-                        <option value="" className="bg-slate-900">Any type</option>
-                        {PROPERTY_TYPES.map((t) => (
-                          <option key={t.value} value={t.value} className="bg-slate-900">
-                            {t.label}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/30" />
-                    </div>
-                  </div>
 
-                  {/* Min price */}
-                  <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/40">
-                      <DollarSign className="h-3 w-3" />
-                      Min Price (৳)
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={filters.minPrice}
-                      onChange={(e) => setFilter("minPrice", e.target.value)}
-                      placeholder="e.g. 5000"
-                      className="h-10 w-full rounded-xl border border-white/10 bg-white/8 px-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/30 transition"
-                    />
-                  </div>
-
-                  {/* Max price */}
-                  <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/40">
-                      <DollarSign className="h-3 w-3" />
-                      Max Price (৳)
-                    </label>
-                    <input
-                      type="number"
-                      min="0"
-                      value={filters.maxPrice}
-                      onChange={(e) => setFilter("maxPrice", e.target.value)}
-                      placeholder="e.g. 30000"
-                      className="h-10 w-full rounded-xl border border-white/10 bg-white/8 px-3 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/30 transition"
-                    />
-                  </div>
-
-                  {/* Bedrooms */}
-                  <div className="space-y-1.5">
-                    <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-white/40">
-                      <BedDouble className="h-3 w-3" />
-                      Bedrooms
-                    </label>
-                    <div className="flex gap-1.5">
-                      {BEDROOMS.map((b) => (
-                        <button
-                          key={b.value}
-                          type="button"
-                          onClick={() => setFilter("bedrooms", b.value)}
-                          className="flex-1 h-10 rounded-xl text-sm font-semibold transition-all duration-200"
-                          style={{
-                            background:
-                              filters.bedrooms === b.value
-                                ? currentSlide.accent
-                                : "rgba(255,255,255,0.08)",
-                            color:
-                              filters.bedrooms === b.value ? "#fff" : "rgba(255,255,255,0.55)",
-                            border:
-                              filters.bedrooms === b.value
-                                ? `1px solid ${currentSlide.accent}`
-                                : "1px solid rgba(255,255,255,0.10)",
-                          }}
-                        >
-                          {b.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Clear filters */}
-                {hasAnyFilter && (
-                  <div className="mt-3 flex justify-end">
-                    <button
-                      type="button"
-                      onClick={clearFilters}
-                      className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs font-medium text-white/50 transition hover:border-white/20 hover:text-white/80"
-                    >
-                      <X className="h-3 w-3" />
-                      Clear all filters
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
           </form>
 
           {/* ── Quick property type tabs ── */}

@@ -34,26 +34,17 @@ export default async function TenantDashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="border-b border-gray-200 bg-white px-6 py-5">
-        <h1 className="text-2xl font-bold text-gray-900">Tenant Dashboard</h1>
-        <p className="mt-0.5 text-sm text-gray-500">
-          Overview of your tenancy and payments
-        </p>
-      </div>
+    <div className="mx-auto max-w-6xl space-y-8">
+      <OverviewCards
+        activeLeaseCount={activeLeaseCount}
+        monthlyRent={monthlyRent}
+        paymentsMade={paymentsMade}
+        upcomingDue={upcomingDue}
+      />
 
-      <div className="mx-auto max-w-6xl space-y-8 px-6 py-8">
-        <OverviewCards
-          activeLeaseCount={activeLeaseCount}
-          monthlyRent={monthlyRent}
-          paymentsMade={paymentsMade}
-          upcomingDue={upcomingDue}
-        />
+      <CurrentRentalsSection rentals={rentals} result={result} />
 
-        <CurrentRentalsSection rentals={rentals} result={result} />
-
-        <RequestHistorySection requestHistory={requestHistory} />
-      </div>
+      <RequestHistorySection requestHistory={requestHistory} />
     </div>
   );
 }

@@ -236,7 +236,7 @@ export const updateUserStatus = async (
       { headers }
     );
     const data = response.data as { success?: boolean; message?: string };
-    revalidateTag(ADMIN_USERS_TAG);
+    revalidateTag(ADMIN_USERS_TAG, "default");
     return { ok: data.success ?? false, message: data.message };
   } catch (error) {
     if (axios.isAxiosError(error)) {
