@@ -48,7 +48,8 @@ export default function PropertiesClient({
     setDeleting(false);
   };
 
-  const handleUpdate = async (data: PropertyFormData) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleUpdate = async (data: PropertyFormData): Promise<any> => {
     const result = await updateProperty(updateTarget.id, data);
     if (result.ok) {
       toast.success(result.message || "Property updated successfully.");

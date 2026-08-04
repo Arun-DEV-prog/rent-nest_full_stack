@@ -22,14 +22,22 @@ export default function RequestActions({ requestId }: { requestId: string }) {
     const result = await updateRentalRequestStatus(requestId, status);
 
     if (!result.ok) {
-      toast.error(result.message || "Something went wrong.", { id: toastId });
+      toast.update(toastId, {
+        render: result.message || "Something went wrong.",
+        type: "error",
+        isLoading: false,
+        autoClose: 4000,
+      });
     } else {
-      toast.success(
-        status === "approved"
-          ? "Request approved successfully!"
-          : "Request rejected.",
-        { id: toastId },
-      );
+      toast.update(toastId, {
+        render:
+          status === "approved"
+            ? "Request approved successfully!"
+            : "Request rejected.",
+        type: "success",
+        isLoading: false,
+        autoClose: 4000,
+      });
       router.refresh();
     }
 

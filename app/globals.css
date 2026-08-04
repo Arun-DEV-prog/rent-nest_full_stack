@@ -128,3 +128,99 @@
     @apply font-sans;
   }
 }
+
+/* ─── Custom Animations ────────────────────────────────────── */
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px) scale(1);
+    opacity: 0.15;
+  }
+  25% {
+    transform: translateY(-20px) translateX(8px) scale(1.2);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-10px) translateX(-12px) scale(0.9);
+    opacity: 0.25;
+  }
+  75% {
+    transform: translateY(-28px) translateX(4px) scale(1.1);
+    opacity: 0.3;
+  }
+}
+
+.hero-particle {
+  animation: particleFloat infinite ease-in-out;
+}
+
+@keyframes heroTextEnter {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.hero-text-enter {
+  animation: heroTextEnter 0.65s ease-out both;
+}
+
+@keyframes howStepEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.how-step-enter {
+  animation: howStepEnter 0.45s ease-out both;
+}
+
+@keyframes bounceSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounceSlow 3s ease-in-out infinite;
+}
+
+@keyframes howOrb {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(20px, -15px) scale(1.05);
+  }
+  66% {
+    transform: translate(-15px, 10px) scale(0.95);
+  }
+}
+
+.how-orb {
+  animation: howOrb 8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}

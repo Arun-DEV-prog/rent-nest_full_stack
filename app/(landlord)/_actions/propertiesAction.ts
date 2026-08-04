@@ -201,8 +201,8 @@ export const updateRentalRequestStatus = async (
       };
     }
 
-    revalidateTag(LANDLORD_REQUESTS_TAG, "default");
-    revalidateTag(LANDLORD_PROPERTIES_TAG, "default");
+    revalidateTag(LANDLORD_REQUESTS_TAG);
+    revalidateTag(LANDLORD_PROPERTIES_TAG);
 
     return {
       ok: true,

@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { usePathname } from "next/navigation";
 import Navbar from "@/components/shared/navber";
 
@@ -45,5 +46,9 @@ export default function NavbarWrapper() {
     return null;
   }
 
-  return <Navbar />;
+  return (
+    <Suspense fallback={null}>
+      <Navbar />
+    </Suspense>
+  );
 }

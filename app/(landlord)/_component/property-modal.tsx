@@ -167,20 +167,30 @@ const defaultFormValues: PropertyFormData = {
 
 export default function PropertyModal({
   action,
+  defaultValues: externalDefaultValues,
+  onClose,
+  mode = "create",
 }: {
   action?: (data: PropertyFormData) => Promise<CreatePropertyResult>;
+  defaultValues?: Partial<PropertyFormData>;
+  onClose?: () => void;
+  mode?: "create" | "update";
 }) {
+  const seedValues = externalDefaultValues
+    ? { ...defaultFormValues, ...externalDefaultValues }
+    : defaultFormValues;
+
   const [open, setOpen] = useState(true);
   const [confirmClose, setConfirmClose] = useState(false);
   const [categories, setCategories] = useState<PropertyCategory[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [categoriesId, setCategoriesId] = useState(
-    defaultFormValues.categoriesId,
+    seedValues.categoriesId,
   );
   const [availability, setAvailability] = useState(
-    defaultFormValues.availability,
+    seedValues.availability,
   );
-  const [imageUrl, setImageUrl] = useState(defaultFormValues.images);
+  const [imageUrl, setImageUrl] = useState(seedValues.images);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -197,7 +207,7 @@ export default function PropertyModal({
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     mode: "onTouched",
-    defaultValues: defaultFormValues,
+    defaultValues: seedValues,
   });
 
   register("categoriesId");
@@ -282,7 +292,10 @@ export default function PropertyModal({
 
   const requestClose = () => {
     if (isDirty) setConfirmClose(true);
-    else setOpen(false);
+    else {
+      setOpen(false);
+      onClose?.();
+    }
   };
 
   if (!open) {
@@ -353,6 +366,7 @@ export default function PropertyModal({
                 onClick={() => {
                   setConfirmClose(false);
                   setOpen(false);
+                  onClose?.();
                 }}
                 className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700"
               >

@@ -129,6 +129,6 @@ export const getPropertyById = unstable_cache(
 );
 
 export const revalidatePublicProperties = async () => {
-  revalidateTag(PUBLIC_PROPERTIES_TAG, "default");
-  revalidateTag(PUBLIC_PROPERTY_TAG, "default");
+  revalidateTag(PUBLIC_PROPERTIES_TAG);
+  revalidateTag(PUBLIC_PROPERTY_TAG);
 };

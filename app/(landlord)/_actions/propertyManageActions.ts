@@ -7,9 +7,9 @@ import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
 
 const invalidatePropertyCaches = () => {
-  revalidateTag("landlord-properties", "default");
-  revalidateTag("public-properties", "default");
-  revalidateTag("public-property", "default");
+  revalidateTag("landlord-properties");
+  revalidateTag("public-properties");
+  revalidateTag("public-property");
 };
 
 export const deleteProperty = async (propertyId: string) => {

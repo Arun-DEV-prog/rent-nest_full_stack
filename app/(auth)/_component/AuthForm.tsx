@@ -30,12 +30,12 @@ export default function AuthForm() {
   );
 
   useEffect(() => {
-    if (!state) return;
+    if (!state || !state.message) return;
 
     if (state.success) {
-      toast.success(state.message || "Login successful");
+      toast.success(state.message);
     } else {
-      toast.error(state.message || "Login failed");
+      toast.error(state.message);
     }
   }, [state]);
 

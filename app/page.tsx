@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Hero from "@/components/hero";
-import HomeText from "@/components/hometext";
+import StatsSection from "@/components/StatsSection";
+import HowItWorks from "@/components/HowItWorks";
 import PropertiesList from "./(public)/properties/_component/PropertiesList";
 import About from "@/components/about";
 import FAQ from "@/components/faq";
@@ -10,10 +11,11 @@ export default function Home() {
   return (
     <>
       <Hero />
-      {/*<HomeText />*/}
+      <StatsSection />
       <Suspense fallback={<div className="p-10 text-center text-gray-500">Loading properties...</div>}>
         <PropertiesList />
       </Suspense>
+      <HowItWorks />
       <About />
       <FAQ />
       <Footer />

@@ -2,18 +2,27 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { ChevronDown, Menu, Plus, Search, User, Grid, X } from "lucide-react";
+import { useSearchParams, usePathname } from "next/navigation";
+import { ChevronDown, Menu, Plus, Search, User, Grid, X, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getProfile, UserProfile } from "@/app/(auth)/_actions/profileAction";
 
+// Each category links to /properties with a ?type= filter.
+// The "All" entry clears the type filter.
 const topCategories = [
-  { label: "All", href: "/" },
-  { label: "Family", href: "/properties/family" },
-  { label: "Bachelor", href: "/properties/bachelor" },
-  { label: "Sublet", href: "/properties/sublet" },
-  { label: "Office", href: "/properties/office" },
-  { label: "Shop", href: "/properties/shop" },
-  { label: "Hostel", href: "/properties/hostel" },
+  { label: "All", type: null },
+  { label: "Family", type: "Family" },
+  { label: "Bachelor", type: "Bachelor" },
+  { label: "Sublet", type: "Sublet" },
+  { label: "Office", type: "Office" },
+  { label: "Shop", type: "Shop" },
+  { label: "Hostel", type: "Hostel" },
 ];
+
+function getCategoryHref(type: string | null): string {
+  if (!type) return "/properties";
+  return `/properties?type=${encodeURIComponent(type)}`;
+}
 
 const mainLinks = [
   { label: "Home", href: "/", active: true },
@@ -25,21 +34,48 @@ const mainLinks = [
   { label: "News", href: "/news" },
 ];
 
-const mobileActions = [
-  { label: "Search", href: "/search", icon: Search },
-  { label: "Login", href: "/login", icon: User },
-  { label: "More", href: "/more", icon: Grid },
-];
+function getDashboardUrl(role?: string) {
+  if (role === "admin") return "/admin-dashboard";
+  if (role === "landlord") return "/landlord-dashboard";
+  return "/tenant-dashboard";
+}
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  // Determine the active category from URL
+  const activeType = searchParams.get("type") ?? null;
+  // A category pill is active if we are on /properties AND the type matches
+  const onPropertiesPage = pathname === "/properties" || pathname.startsWith("/properties");
+  const activeCategoryType = onPropertiesPage ? activeType : "__none__";
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    getProfile()
+      .then((res) => {
+        if (isMounted && res.ok) {
+          setUser(res.user);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setUser(null);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const dashboardHref = user ? getDashboardUrl(user.role) : "/login";
 
   return (
     <header className="sticky top-0 z-50">
@@ -52,20 +88,26 @@ export default function Navbar() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-1 sm:px-4 lg:px-5">
           <nav className="flex flex-wrap items-center gap-2 overflow-x-auto pb-1">
-            {topCategories.map((item, index) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className={cn(
-                  "whitespace-nowrap rounded-full border px-3 py-2 text-sm transition",
-                  index === 0
-                    ? "bg-slate-100 text-slate-950"
-                    : "border-slate-600/40 text-slate-100 hover:border-slate-400/70 hover:bg-slate-800",
-                )}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {topCategories.map((item) => {
+              const isActive =
+                item.type === null
+                  ? activeCategoryType === null
+                  : activeCategoryType === item.type;
+              return (
+                <Link
+                  key={item.label}
+                  href={getCategoryHref(item.type)}
+                  className={cn(
+                    "whitespace-nowrap rounded-full border px-3 py-2 text-sm transition",
+                    isActive
+                      ? "bg-slate-100 text-slate-950 border-transparent font-semibold"
+                      : "border-slate-600/40 text-slate-100 hover:border-slate-400/70 hover:bg-slate-800",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -83,12 +125,22 @@ export default function Navbar() {
             >
               <Search className="h-5 w-5" />
             </Link>
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-100"
-            >
-              Login
-            </Link>
+            {user ? (
+              <Link
+                href={dashboardHref}
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-950 transition hover:bg-slate-100"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -145,11 +197,12 @@ export default function Navbar() {
               <Search className="h-5 w-5" />
             </button>
             <Link
-              href="/login"
+              href={dashboardHref}
               className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition hover:border-slate-300 hover:text-slate-950 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-slate-700"
-              aria-label="Login"
+              aria-label={user ? "Dashboard" : "Login"}
+              title={user ? "Dashboard" : "Login"}
             >
-              <User className="h-5 w-5" />
+              {user ? <LayoutDashboard className="h-5 w-5" /> : <User className="h-5 w-5" />}
             </Link>
             <button
               type="button"
@@ -176,21 +229,27 @@ export default function Navbar() {
         >
           <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 sm:px-6 lg:px-8">
             <div className="flex flex-wrap gap-2 overflow-x-auto pb-1">
-              {topCategories.map((item, index) => (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={cn(
-                    "whitespace-nowrap rounded-full border px-3 py-2 text-sm transition",
-                    index === 0
-                      ? "bg-slate-100 text-slate-950"
-                      : "border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900",
-                  )}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {topCategories.map((item) => {
+                const isActive =
+                  item.type === null
+                    ? activeCategoryType === null
+                    : activeCategoryType === item.type;
+                return (
+                  <Link
+                    key={item.label}
+                    href={getCategoryHref(item.type)}
+                    onClick={() => setMobileOpen(false)}
+                    className={cn(
+                      "whitespace-nowrap rounded-full border px-3 py-2 text-sm transition",
+                      isActive
+                        ? "bg-emerald-700 text-white border-transparent font-semibold"
+                        : "border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900",
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </div>
 
             <div className="grid gap-2 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
@@ -219,17 +278,30 @@ export default function Navbar() {
                 Add Property
               </Link>
               <div className="grid gap-2 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-                {mobileActions.map((action) => (
-                  <Link
-                    key={action.label}
-                    href={action.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
-                  >
-                    <action.icon className="h-5 w-5" />
-                    {action.label}
-                  </Link>
-                ))}
+                <Link
+                  href="/search"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  <Search className="h-5 w-5" />
+                  Search
+                </Link>
+                <Link
+                  href={dashboardHref}
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  {user ? <LayoutDashboard className="h-5 w-5 text-emerald-600" /> : <User className="h-5 w-5" />}
+                  {user ? "Dashboard" : "Login"}
+                </Link>
+                <Link
+                  href="/more"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
+                >
+                  <Grid className="h-5 w-5" />
+                  More
+                </Link>
               </div>
             </div>
           </div>

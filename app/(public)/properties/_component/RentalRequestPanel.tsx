@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { CalendarDays, Clock, Send, LogIn, X, Loader2 } from "lucide-react";
 
 import { submitRentalRequest } from "../../_actions/rentalRequestAction";
+import type { PublicProperty } from "../../_actions/publicPropertiesAction";
 
 const requestSchema = z.object({
   move_in_date: z.string().min(1, "Move-in date is required"),

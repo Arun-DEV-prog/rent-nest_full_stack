@@ -1,18 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, LogOut, Settings, UserCircle2 } from "lucide-react";
+import { ChevronDown, LogOut, Settings, UserCircle2, Loader2 } from "lucide-react";
+import { logoutAction } from "@/app/(auth)/_actions/authActions";
+import { toast } from "sonner";
 
 const menuItems = [
   { label: "Profile", href: "/admin-dashboard/profile", icon: UserCircle2 },
   { label: "Settings", href: "/admin-dashboard/settings", icon: Settings },
-  { label: "Logout", href: "/login", icon: LogOut },
 ];
 
 export default function ProfileMenu() {
   const [open, setOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -25,6 +27,19 @@ export default function ProfileMenu() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = () => {
+    setOpen(false);
+    startTransition(async () => {
+      const toastId = toast.loading("Logging out...");
+      try {
+        await logoutAction();
+        toast.success("Logged out successfully.", { id: toastId });
+      } catch {
+        toast.error("Failed to logout. Please try again.", { id: toastId });
+      }
+    });
+  };
 
   return (
     <div ref={menuRef} className="relative inline-flex text-left">
@@ -56,6 +71,21 @@ export default function ProfileMenu() {
                 </Link>
               );
             })}
+
+            <div className="mx-3 my-1 border-t border-slate-100" />
+
+            <button
+              onClick={handleLogout}
+              disabled={isPending}
+              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-50 w-full text-left"
+            >
+              {isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <LogOut className="h-4 w-4" />
+              )}
+              {isPending ? "Logging out..." : "Logout"}
+            </button>
           </div>
         </div>
       ) : null}

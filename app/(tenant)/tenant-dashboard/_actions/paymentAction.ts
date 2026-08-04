@@ -75,9 +75,9 @@ export const verifyPayment = async (sessionId: string, rentalId: string) => {
     };
 
     if (responseData.success) {
-      revalidateTag("tenant-rentals", "default");
-      revalidateTag("public-properties", "default");
-      revalidateTag("public-property", "default");
+      revalidateTag("tenant-rentals");
+      revalidateTag("public-properties");
+      revalidateTag("public-property");
     }
 
     return {
