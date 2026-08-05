@@ -1,19 +1,11 @@
 // app/properties/[id]/page.tsx
 import { notFound } from "next/navigation";
-import {
-  BedDouble,
-  Bath,
-  Ruler,
-  MapPin,
-  Calendar,
-  Layers,
-  CheckCircle,
-  XCircle,
-  Tag,
-} from "lucide-react";
+import { BedDouble, Bath, Ruler, MapPin, Layers } from "lucide-react";
 import { getPropertyById } from "../../_actions/publicPropertiesAction";
 import { checkAuth } from "../../_actions/rentalRequestAction";
 import RentalRequestPanel from "../_component/RentalRequestPanel";
+import PropertyDetailTabs from "../_component/PropertyDetailTabs";
+import PropertyImageGallery from "../_component/PropertyImageGallery";
 
 export default async function PropertyDetailPage({
   params,
@@ -32,175 +24,127 @@ export default async function PropertyDetailPage({
   const p = propertyResult.property;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <div className="relative w-full h-80 md:h-[480px] bg-gray-200 overflow-hidden">
-        <img
-          src={p.images || "/placeholder.jpg"}
-          alt={p.title}
-          className="w-full h-full object-cover"
-        />
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <PropertyImageGallery property={p} />
 
-        {/* Badges over image */}
-        <div className="absolute top-5 left-5 flex gap-2">
-          <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white/90 text-gray-700 border border-white/50 backdrop-blur-sm">
-            {p.categories?.name ?? "Property"}
-          </span>
-          <span
-            className={`text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm ${
-              p.availability
-                ? "bg-green-500/90 text-white"
-                : "bg-red-500/90 text-white"
-            }`}
-          >
-            {p.availability ? "Available" : "Unavailable"}
-          </span>
-        </div>
-
-        {/* Title over image bottom */}
-        <div className="absolute bottom-0 left-0 right-0 px-6 pb-6">
-          <h1 className="text-2xl md:text-3xl font-bold text-white drop-shadow-md">
-            {p.title}
-          </h1>
-          <div className="flex items-center gap-1.5 text-white/80 text-sm mt-1.5">
-            <MapPin className="w-4 h-4 shrink-0" />
-            {p.address}, {p.division}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left — Property Info */}
-          <div className="lg:col-span-2 space-y-5">
-            {/* Specs Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {[
-                { icon: BedDouble, label: "Bedrooms", value: p.bedrooms },
-                { icon: Bath, label: "Bathrooms", value: p.bathrooms },
-                { icon: Ruler, label: "Size", value: `${p.size_sqft} sqft` },
-                { icon: Layers, label: "Floor", value: `Floor ${p.floor}` },
-              ].map(({ icon: Icon, label, value }) => (
-                <div
-                  key={label}
-                  className="bg-white border border-gray-200 rounded-2xl p-4 flex flex-col items-center gap-2"
-                >
-                  <div className="bg-[#123832]/10 p-2.5 rounded-xl">
-                    <Icon className="w-5 h-5 text-[#123832]" />
-                  </div>
-                  <p className="text-base font-bold text-gray-900">{value}</p>
-                  <p className="text-xs text-gray-400">{label}</p>
+        <div className="mt-10 grid gap-6 xl:grid-cols-[1.55fr_0.95fr]">
+          <div className="space-y-6">
+            <section className="rounded-[32px] bg-white p-6 shadow-sm border border-slate-200">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                    Listed by
+                  </p>
+                  <p className="text-base font-semibold text-slate-900">
+                    Trusted landlord
+                  </p>
                 </div>
-              ))}
-            </div>
-
-            {/* About */}
-            <div className="bg-white border border-gray-200 rounded-2xl p-6">
-              <h2 className="font-semibold text-gray-900 text-base mb-3">
-                About this property
-              </h2>
-              {p.description ? (
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  {p.description}
-                </p>
-              ) : (
-                <p className="text-sm text-gray-400 italic">
-                  No description provided.
-                </p>
-              )}
-            </div>
-
-            {/* Details Table */}
-            <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-100">
-                <h2 className="font-semibold text-gray-900 text-base">
-                  Property Details
-                </h2>
+                <div className="space-y-2">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                    Neighborhood
+                  </p>
+                  <p className="text-base font-semibold text-slate-900">
+                    {p.division}
+                  </p>
+                </div>
               </div>
-              <div className="divide-y divide-gray-100">
+
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                 {[
-                  { label: "Property Type", value: p.categories?.name ?? "—" },
-                  { label: "Division", value: p.division },
-                  { label: "Address", value: p.address },
-                  { label: "Floor", value: `Floor ${p.floor}` },
-                  { label: "Size", value: `${p.size_sqft} sqft` },
-                  { label: "Bedrooms", value: p.bedrooms },
-                  { label: "Bathrooms", value: p.bathrooms },
-                  {
-                    label: "Available From",
-                    value: new Date(p.available_from).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      },
-                    ),
-                  },
-                  {
-                    label: "Status",
-                    value: p.availability ? "Available" : "Unavailable",
-                    highlight: p.availability ? "green" : "red",
-                  },
-                ].map(({ label, value, highlight }) => (
+                  { icon: BedDouble, label: "Bedrooms", value: p.bedrooms },
+                  { icon: Bath, label: "Bathrooms", value: p.bathrooms },
+                  { icon: Ruler, label: "Size", value: `${p.size_sqft} sqft` },
+                  { icon: Layers, label: "Floor", value: `Floor ${p.floor}` },
+                ].map(({ icon: Icon, label, value }) => (
                   <div
                     key={label}
-                    className="flex items-center justify-between px-6 py-3.5"
+                    className="rounded-3xl bg-slate-50 p-4 text-center"
                   >
-                    <span className="text-sm text-gray-500">{label}</span>
-                    <span
-                      className={`text-sm font-medium ${
-                        highlight === "green"
-                          ? "text-green-600"
-                          : highlight === "red"
-                            ? "text-red-500"
-                            : "text-gray-800"
-                      }`}
-                    >
-                      {highlight === "green" && (
-                        <CheckCircle className="w-4 h-4 inline mr-1" />
-                      )}
-                      {highlight === "red" && (
-                        <XCircle className="w-4 h-4 inline mr-1" />
-                      )}
+                    <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#123832]/10 text-[#123832]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <p className="mt-3 text-lg font-semibold text-slate-900">
                       {value}
-                    </span>
+                    </p>
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                      {label}
+                    </p>
                   </div>
                 ))}
               </div>
-            </div>
 
-            {/* Available From banner */}
-            <div className="bg-[#123832]/5 border border-[#123832]/20 rounded-2xl p-5 flex items-center gap-4">
-              <div className="bg-[#123832]/10 p-3 rounded-xl shrink-0">
-                <Calendar className="w-5 h-5 text-[#123832]" />
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-3xl bg-[#effaf7] p-5">
+                  <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">
+                    Move-in ready
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-emerald-900">
+                    {new Date(p.available_from).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <div className="rounded-3xl bg-[#f8fafc] p-5">
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
+                    Status
+                  </p>
+                  <p
+                    className={`mt-2 text-sm font-semibold ${p.availability ? "text-emerald-800" : "text-rose-600"}`}
+                  >
+                    {p.availability ? "Available" : "Unavailable"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs text-gray-500 font-medium">
-                  Available From
-                </p>
-                <p className="text-sm font-semibold text-gray-900 mt-0.5">
-                  {new Date(p.available_from).toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
-            </div>
+
+              <PropertyDetailTabs property={p} />
+            </section>
           </div>
 
-          {/* Right — Rent + Request Panel */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24">
-              <RentalRequestPanel
-                property={p}
-                isLoggedIn={authResult.isLoggedIn}
-              />
-            </div>
-          </div>
+          <aside className="space-y-6 xl:sticky xl:top-24 xl:self-start">
+            <section className="rounded-[32px] bg-white p-6 shadow-sm border border-slate-200">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+                    Monthly rent
+                  </p>
+                  <p className="mt-2 text-3xl font-semibold text-[#123832]">
+                    ৳{Number(p.rent).toLocaleString()}
+                  </p>
+                </div>
+                <div className="rounded-3xl bg-[#123832] px-4 py-3 text-white text-sm font-semibold">
+                  {p.categories?.name ?? "Property"}
+                </div>
+              </div>
+
+              <div className="mt-6 space-y-4 text-sm text-slate-600">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-slate-400" />
+                  <span>
+                    {p.address}, {p.division}
+                  </span>
+                </div>
+                <div className="rounded-3xl bg-slate-50 p-4 text-sm text-slate-600">
+                  <p className="font-semibold text-slate-900">Quick facts</p>
+                  <ul className="mt-3 space-y-2">
+                    <li>Bedrooms: {p.bedrooms}</li>
+                    <li>Bathrooms: {p.bathrooms}</li>
+                    <li>Floor: {p.floor}</li>
+                    <li>Size: {p.size_sqft} sqft</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <RentalRequestPanel
+                  property={p}
+                  isLoggedIn={authResult.isLoggedIn}
+                />
+              </div>
+            </section>
+          </aside>
         </div>
       </div>
     </div>
