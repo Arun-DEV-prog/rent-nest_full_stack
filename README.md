@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rent Nest
 
-## Getting Started
+Live demo: https://rent-nest-mauve.vercel.app/
 
-First, run the development server:
+## Project Overview
+
+Rent Nest is a Next.js property rental marketplace frontend that consumes a REST backend API. It provides:
+
+- Public property listings with search, filters and pagination
+- Interactive property detail pages with image gallery and sticky rental request panel
+- Tenant rental request flow with validation
+- Landlord dashboard for managing properties and rental requests
+- Admin dashboard for user and content moderation
+
+This repository contains the Next.js app (app router), server actions that wrap backend API calls, and some client state managed with `zustand`.
+
+## Tech Stack
+
+- Next.js (app router)
+- React, TypeScript
+- Tailwind CSS
+- Zustand (client state)
+- Axios (central instance at `lib/axios.ts`)
+
+## Quickstart
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Add environment variable (example):
+
+```
+BACKEND_API_URL=https://rentnest-backend-six.vercel.app/api
+```
+
+3. Run dev server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Build for production:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Important Files
 
-## Learn More
+- `API_INTEGRATION.md` — mapping of frontend components to backend endpoints
+- `lib/axios.ts` — axios instance with `baseURL` from `process.env.BACKEND_API_URL`
+- `app/(public)/_actions/publicPropertiesAction.ts` — public properties endpoints
+- `app/(public)/_actions/rentalRequestAction.ts` — rental request server actions
+- `app/(auth)/_actions/authActions.ts` — authentication actions
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This project is deployed on Vercel. Live demo:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+https://rent-nest-mauve.vercel.app/
 
-## Deploy on Vercel
+## Notes & Next Steps
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The app uses HTTP-only cookies named `accessToken` and `refresToken` for authenticated endpoints.
+- If you want example request/response payloads added to `API_INTEGRATION.md`, let me know and I will expand it.
+- Consider adding integration tests or a mock backend for CI.
