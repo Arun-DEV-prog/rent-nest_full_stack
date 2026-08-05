@@ -74,7 +74,7 @@ function AccordionItem({
       >
         <button
           onClick={onToggle}
-          className="w-full px-6 py-5 flex items-center justify-between gap-4 focus:outline-none group"
+          className="w-full px-4 py-4 sm:px-6 sm:py-5 flex items-center justify-between gap-3 sm:gap-4 focus:outline-none group"
         >
           <div className="flex items-center gap-4 text-left">
             <div
@@ -125,7 +125,7 @@ function AccordionItem({
             opacity: isOpen ? 1 : 0,
           }}
         >
-          <div className="px-6 pb-5 pl-[4.25rem]">
+          <div className="px-4 pb-4 pl-12 sm:px-6 sm:pb-5 sm:pl-[4.25rem]">
             <p className="text-gray-600 leading-relaxed text-sm sm:text-base">{item.answer}</p>
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function FAQ() {
           <p className="text-xs uppercase tracking-[0.35em] text-emerald-500 font-semibold mb-3">
             Got Questions?
           </p>
-          <h2 className="text-3xl sm:text-5xl font-black text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-gray-900 mb-4">
             Frequently Asked{" "}
             <span className="relative">
               <span className="relative z-10 text-emerald-500">Questions</span>

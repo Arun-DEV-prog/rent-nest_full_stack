@@ -1,7 +1,7 @@
 // components/PropertiesList.tsx
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import {
   getPublicProperties,
@@ -11,6 +11,7 @@ import {
 import PropertyCard from "./PropertyCard";
 import CardSkeleton from "./CardSkeleton";
 import FilterBar from "./FilterBar";
+import { usePropertiesStore, SortOption } from "./propertiesStore";
 import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 import "aos/dist/aos.css";
 
@@ -62,15 +63,18 @@ export default function PropertiesList() {
   const [properties, setProperties] = useState<PublicProperty[]>([]);
   const [meta, setMeta] = useState<MetaData | undefined>();
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(() =>
-    Number(searchParams.get("page") ?? 1),
+
+  const currentPage = usePropertiesStore((state) => state.currentPage);
+  const filters = usePropertiesStore((state) => state.filters);
+  const showMobileFilters = usePropertiesStore(
+    (state) => state.showMobileFilters,
   );
-  const [filters, setFilters] = useState<Filters>(() =>
-    filtersFromSearchParams(searchParams),
-  );
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [sort, setSort] = useState<"newest" | "priceLow" | "priceHigh">(
-    "newest",
+  const sort = usePropertiesStore((state) => state.sort);
+  const setCurrentPage = usePropertiesStore((state) => state.setCurrentPage);
+  const setFilters = usePropertiesStore((state) => state.setFilters);
+  const setSort = usePropertiesStore((state) => state.setSort);
+  const setShowMobileFilters = usePropertiesStore(
+    (state) => state.setShowMobileFilters,
   );
 
   const divisions = Array.from(new Set(properties.map((p) => p.division)));
@@ -135,7 +139,7 @@ export default function PropertiesList() {
     skipUrlPushRef.current = true;
     setFilters(filtersFromSearchParams(searchParams));
     setCurrentPage(Number(searchParams.get("page") ?? 1));
-  }, [searchParams]);
+  }, [searchParams, setFilters, setCurrentPage]);
 
   useEffect(() => {
     let cancelled = false;
@@ -181,12 +185,10 @@ export default function PropertiesList() {
 
   const handleFiltersChange = (next: Filters) => {
     setFilters(next);
-    setCurrentPage(1);
   };
 
-  const handleSortChange = (val: "newest" | "priceLow" | "priceHigh") => {
+  const handleSortChange = (val: SortOption) => {
     setSort(val);
-    setCurrentPage(1);
   };
 
   const totalPages = meta?.pages ?? 1;

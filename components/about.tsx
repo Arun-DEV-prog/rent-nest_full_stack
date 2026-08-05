@@ -35,7 +35,7 @@ export default function About() {
               <p className="text-xs uppercase tracking-[0.35em] text-emerald-500 font-semibold mb-3">
                 Who We Are
               </p>
-              <h2 className="text-3xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
+              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-gray-900 leading-tight mb-6">
                 About{" "}
                 <span className="relative inline-block">
                   <span className="relative z-10">Rent Nest</span>
@@ -48,7 +48,7 @@ export default function About() {
             </AnimateOnScroll>
 
             <AnimateOnScroll animation="fade-left" delay={100}>
-              <p className="text-lg text-gray-600 leading-relaxed mb-4">
+              <p className="text-base sm:text-lg text-gray-600 leading-relaxed mb-4">
                 Welcome to <span className="font-semibold text-gray-900">Rent Nest</span>, the
                 ultimate platform for finding rental properties in Bangladesh. Our system lets you
                 explore properties by{" "}
@@ -113,7 +113,7 @@ export default function About() {
                 <p className="text-xs uppercase tracking-widest text-emerald-400 mb-4 font-semibold">
                   Our Coverage
                 </p>
-                <h3 className="text-2xl font-black text-white mb-8">
+                <h3 className="text-xl sm:text-2xl font-black text-white mb-6 sm:mb-8">
                   Across all 64 districts
                 </h3>
 
@@ -151,7 +151,7 @@ export default function About() {
 
               {/* Floating badge */}
               <div
-                className="absolute -top-4 -right-4 rounded-2xl px-4 py-3 shadow-2xl animate-bounce-slow"
+                className="absolute -top-3 -right-2 sm:-top-4 sm:-right-4 rounded-xl sm:rounded-2xl px-3 py-2 sm:px-4 sm:py-3 shadow-2xl animate-bounce-slow"
                 style={{ background: "#10b981" }}
               >
                 <p className="text-xs font-bold text-white uppercase tracking-wide">🏆 #1 Rated</p>

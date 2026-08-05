@@ -44,7 +44,7 @@ const features = [
 
 export default function StatsSection() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
       {/* Background decoration */}
       <div
         className="absolute -top-40 -right-40 w-96 h-96 rounded-full opacity-5 pointer-events-none"
@@ -61,7 +61,7 @@ export default function StatsSection() {
           <p className="text-xs uppercase tracking-[0.35em] text-emerald-500 font-semibold mb-3">
             Why Rent Nest?
           </p>
-          <h2 className="text-3xl sm:text-5xl font-black text-gray-900 leading-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-gray-900 leading-tight">
             Trusted by <span className="text-emerald-500">thousands</span> across Bangladesh
           </h2>
           <p className="mt-4 text-lg text-gray-500 max-w-2xl mx-auto">
@@ -70,7 +70,7 @@ export default function StatsSection() {
         </AnimateOnScroll>
 
         {/* Stats grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-12 sm:mb-20">
           {stats.map((stat, idx) => {
             const Icon = stat.icon;
             return (
@@ -80,7 +80,7 @@ export default function StatsSection() {
                 delay={idx * 100}
               >
                 <div
-                  className="group rounded-2xl p-6 text-center cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+                  className="group rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center cursor-default transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                   style={{
                     border: "1px solid #f1f5f9",
                     background: "#fff",
@@ -95,12 +95,12 @@ export default function StatsSection() {
                   }}
                 >
                   <div
-                    className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 transition-transform duration-300 group-hover:scale-110"
+                    className="inline-flex items-center justify-center w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl mb-3 sm:mb-4 transition-transform duration-300 group-hover:scale-110"
                     style={{ background: `${stat.color}15` }}
                   >
-                    <Icon className="w-7 h-7" style={{ color: stat.color }} />
+                    <Icon className="w-5 h-5 sm:w-7 sm:h-7" style={{ color: stat.color }} />
                   </div>
-                  <div className="text-3xl font-black text-gray-900 sm:text-4xl">
+                  <div className="text-2xl font-black text-gray-900 sm:text-3xl lg:text-4xl">
                     <AnimatedCounter
                       end={stat.value}
                       suffix={stat.suffix}
@@ -116,7 +116,7 @@ export default function StatsSection() {
 
         {/* Feature cards */}
         <AnimateOnScroll animation="fade-up">
-          <h3 className="text-center text-2xl sm:text-3xl font-bold text-gray-900 mb-10">
+          <h3 className="text-center text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-6 sm:mb-10">
             Everything you need to rent smarter
           </h3>
         </AnimateOnScroll>

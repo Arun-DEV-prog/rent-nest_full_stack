@@ -179,7 +179,7 @@ export default function HowItWorks() {
   };
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-12 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden text-slate-900 border-y border-slate-200">
+    <section className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 lg:px-12 bg-gradient-to-b from-slate-50 via-white to-slate-50 relative overflow-hidden text-slate-900 border-y border-slate-200">
       {/* Decorative ambient background lights */}
       <div className="absolute top-0 right-1/3 w-96 h-96 rounded-full bg-emerald-100/50 blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-1/4 w-96 h-96 rounded-full bg-sky-100/50 blur-3xl pointer-events-none" />
@@ -191,7 +191,7 @@ export default function HowItWorks() {
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
             Simple & Transparent Journey
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             How Rent Nest{" "}
             <span
               className="bg-clip-text text-transparent bg-gradient-to-r"
@@ -202,13 +202,13 @@ export default function HowItWorks() {
               Works For You
             </span>
           </h2>
-          <p className="mt-4 text-slate-600 text-base sm:text-lg">
+          <p className="mt-3 text-slate-600 text-sm sm:text-base lg:text-lg">
             Experience a streamlined end-to-end digital rental workflow designed for tenants and property owners in Bangladesh.
           </p>
         </AnimateOnScroll>
 
         {/* Role Toggle Switch & Auto-Play Controls */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 max-w-4xl mx-auto mb-12 bg-white p-2 rounded-2xl border border-slate-200/80 shadow-md">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 max-w-4xl mx-auto mb-8 sm:mb-12 bg-white p-2 rounded-2xl border border-slate-200/80 shadow-md">
           {/* Role selector tabs */}
           <div className="grid grid-cols-2 gap-1.5 w-full sm:w-auto bg-slate-100/80 p-1.5 rounded-xl border border-slate-200/60">
             <button
@@ -251,7 +251,7 @@ export default function HowItWorks() {
         </div>
 
         {/* Main Grid: Steps List (Left) + Interactive Live Simulator (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
           {/* LEFT COLUMN: Step Buttons (5 cols) */}
           <div className="lg:col-span-5 space-y-3">
@@ -332,8 +332,8 @@ export default function HowItWorks() {
           </div>
 
           {/* RIGHT COLUMN: Interactive Live Mockup Simulator (7 cols) */}
-          <div className="lg:col-span-7 sticky top-28">
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-xl relative overflow-hidden transition-all duration-500">
+          <div className="lg:col-span-7 lg:sticky lg:top-28">
+            <div className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white p-4 sm:p-6 lg:p-8 shadow-xl relative overflow-hidden transition-all duration-500">
               
               {/* Top Bar of Mockup */}
               <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
@@ -345,10 +345,10 @@ export default function HowItWorks() {
                     <currentStep.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                    <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
                       Interactive Demonstration • Step {currentStep.stepNumber}
                     </span>
-                    <h4 className="text-lg font-bold text-slate-900">{currentStep.title}</h4>
+                    <h4 className="text-base sm:text-lg font-bold text-slate-900">{currentStep.title}</h4>
                   </div>
                 </div>
 
@@ -429,7 +429,7 @@ export default function HowItWorks() {
                 {role === "tenant" && activeIdx === 2 && (
                   <div className="space-y-4">
                     <p className="text-xs text-slate-500 font-semibold">Click items to toggle application verification badges:</p>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                       {[
                         { key: "nid", label: "NID Verified" },
                         { key: "job", label: "Income Slip" },
@@ -550,7 +550,7 @@ export default function HowItWorks() {
               {/* Bottom Feature Bullets */}
               <div className="mt-6 pt-5 border-t border-slate-100">
                 <p className="text-xs font-extrabold uppercase tracking-wider text-slate-400 mb-3">Key Highlights</p>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2">
                   {currentStep.highlights.map((h) => (
                     <div key={h} className="flex items-center gap-1.5 text-xs text-slate-700 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200/80 font-medium">
                       <Check className="w-3.5 h-3.5 shrink-0 text-emerald-600" />

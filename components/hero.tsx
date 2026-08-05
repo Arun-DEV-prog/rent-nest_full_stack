@@ -181,7 +181,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-slate-950 text-white mb-5 min-h-[90vh] flex flex-col">
+    <section className="relative overflow-hidden bg-slate-950 text-white mb-5 min-h-[85vh] md:min-h-[90vh] flex flex-col">
       {/* Background slides */}
       {slides.map((slide, idx) => (
         <div
@@ -225,7 +225,7 @@ export default function Hero() {
       </div>
 
       {/* Main content */}
-      <div className="relative z-[5] flex flex-1 flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto w-full">
+      <div className="relative z-[5] flex flex-1 flex-col items-center justify-center px-4 py-10 sm:py-16 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto w-full">
         {/* Eyebrow badge */}
         <div
           key={`eyebrow-${activeSlide}`}
@@ -243,7 +243,7 @@ export default function Hero() {
         {/* Title */}
         <div
           key={`top-${activeSlide}`}
-          className="hero-text-enter mb-2 text-2xl font-medium uppercase tracking-widest text-white/80 sm:text-3xl"
+          className="hero-text-enter mb-2 text-lg font-medium uppercase tracking-widest text-white/80 sm:text-2xl md:text-3xl"
           style={{ animationDelay: "80ms" }}
         >
           {currentSlide.titleTop}
@@ -251,7 +251,7 @@ export default function Hero() {
 
         <h1
           key={`main-${activeSlide}`}
-          className="hero-text-enter text-6xl font-black uppercase sm:text-8xl"
+          className="hero-text-enter text-4xl font-black uppercase sm:text-6xl lg:text-8xl"
           style={{
             animationDelay: "160ms",
             background: `linear-gradient(135deg, #fff 30%, ${currentSlide.accent})`,
@@ -266,7 +266,7 @@ export default function Hero() {
 
         <p
           key={`suffix-${activeSlide}`}
-          className="hero-text-enter mt-3 text-lg text-slate-300 sm:text-2xl"
+          className="hero-text-enter mt-2 text-base text-slate-300 sm:text-lg md:text-2xl"
           style={{ animationDelay: "240ms" }}
         >
           {currentSlide.titleSuffix}
@@ -274,7 +274,7 @@ export default function Hero() {
 
         {/* ── SEARCH PANEL ── */}
         <div
-          className="hero-text-enter mt-10 w-full max-w-3xl"
+          className="hero-text-enter mt-6 sm:mt-10 w-full max-w-3xl"
           style={{ animationDelay: "320ms" }}
         >
           <form
@@ -345,7 +345,7 @@ export default function Hero() {
               {/* Search button */}
               <button
                 type="submit"
-                className="m-3 sm:m-2 flex items-center justify-center gap-2 rounded-xl px-6 py-3 sm:py-3 text-sm font-bold text-white transition-all duration-200 hover:brightness-110 active:scale-95 flex-shrink-0 w-auto"
+                className="m-2 flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 sm:px-6 sm:py-3 text-sm font-bold text-white transition-all duration-200 hover:brightness-110 active:scale-95 flex-shrink-0 w-auto"
                 style={{ background: currentSlide.accent }}
               >
                 <Search className="h-4 w-4" />
@@ -357,13 +357,13 @@ export default function Hero() {
           </form>
 
           {/* ── Quick property type tabs ── */}
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
+          <div className="mt-3 sm:mt-4 flex flex-wrap justify-center gap-1.5 sm:gap-2">
             {PROPERTY_TYPES.map((pt) => (
               <button
                 key={pt.value}
                 type="button"
                 onClick={() => handleQuickType(pt.value)}
-                className="rounded-full px-4 py-1.5 text-sm font-semibold transition-all duration-300 cursor-pointer"
+                className="rounded-full px-3 py-1 text-xs sm:px-4 sm:py-1.5 sm:text-sm font-semibold transition-all duration-300 cursor-pointer"
                 style={{
                   background:
                     filters.type === pt.value
@@ -386,7 +386,7 @@ export default function Hero() {
 
         {/* Quick stats */}
         <div
-          className="hero-text-enter mt-8 flex flex-wrap justify-center gap-8"
+          className="hero-text-enter mt-5 sm:mt-8 flex flex-wrap justify-center gap-5 sm:gap-8"
           style={{ animationDelay: "480ms" }}
         >
           {[
@@ -395,7 +395,7 @@ export default function Hero() {
             { label: "Happy Tenants", value: "8,500+" },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="text-xl font-black text-white sm:text-2xl">{stat.value}</p>
+              <p className="text-lg font-black text-white sm:text-xl md:text-2xl">{stat.value}</p>
               <p className="text-xs uppercase tracking-widest text-white/50">{stat.label}</p>
             </div>
           ))}
