@@ -9,6 +9,59 @@ export type CreatePropertyResult =
   | { ok: true; property: PropertyFormData; message?: string }
   | { ok: false; message: string };
 
+export type PropertyCategory = {
+  id: number;
+  name: string;
+  description?: string;
+  propertiesCount?: number;
+};
+
+export async function getPropertyCategoriesAction(): Promise<{
+  ok: boolean;
+  data?: PropertyCategory[];
+  message?: string;
+}> {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
+
+    const response = await axiosInstance.get("/api/properties/categories", {
+      headers: token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : undefined,
+    });
+
+    const payload = response.data as {
+      success?: boolean;
+      data?: PropertyCategory[];
+      message?: string;
+    };
+
+    return {
+      ok: true,
+      data: Array.isArray(payload?.data) ? payload.data : [],
+      message: payload?.message,
+    };
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      return {
+        ok: false,
+        message:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to load property categories.",
+      };
+    }
+
+    return {
+      ok: false,
+      message: "Failed to load property categories.",
+    };
+  }
+}
+
 export async function createPropertyAction(
   data: PropertyFormData,
 ): Promise<CreatePropertyResult> {

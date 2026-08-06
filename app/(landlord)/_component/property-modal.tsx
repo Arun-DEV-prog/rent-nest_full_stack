@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, type ComponentType } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,18 +30,15 @@ import {
 
 import { toast } from "react-toastify";
 import { propertySchema, type PropertyFormData } from "@/lib/propertySchema";
-import { createPropertyAction } from "../landlord-dashboard/properties/new/actions";
+import {
+  createPropertyAction,
+  getPropertyCategoriesAction,
+  type PropertyCategory,
+} from "../landlord-dashboard/properties/new/actions";
 
 type CreatePropertyResult =
   | { ok: true; property: PropertyFormData; message?: string }
   | { ok: false; message: string };
-
-type PropertyCategory = {
-  id: number;
-  name: string;
-  description?: string;
-  propertiesCount?: number;
-};
 
 /* ------------------------------------------------------------------ */
 /* Shared visual primitives                                           */
@@ -184,12 +180,8 @@ export default function PropertyModal({
   const [confirmClose, setConfirmClose] = useState(false);
   const [categories, setCategories] = useState<PropertyCategory[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
-  const [categoriesId, setCategoriesId] = useState(
-    seedValues.categoriesId,
-  );
-  const [availability, setAvailability] = useState(
-    seedValues.availability,
-  );
+  const [categoriesId, setCategoriesId] = useState(seedValues.categoriesId);
+  const [availability, setAvailability] = useState(seedValues.availability);
   const [imageUrl, setImageUrl] = useState(seedValues.images);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -218,13 +210,10 @@ export default function PropertyModal({
 
     const loadCategories = async () => {
       try {
-        const response = await axios.get<{
-          success?: boolean;
-          data?: PropertyCategory[];
-        }>("/api/properties/categories");
+        const result = await getPropertyCategoriesAction();
 
-        if (isMounted && response.data?.success) {
-          const fetchedCategories = response.data.data ?? [];
+        if (isMounted && result.ok) {
+          const fetchedCategories = result.data ?? [];
           setCategories(fetchedCategories);
 
           if (
