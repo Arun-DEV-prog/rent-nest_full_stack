@@ -1,4 +1,5 @@
 // app/payment/cancel/page.tsx
+import { handlePaymentCancel } from "../../_actions/paymentAction";
 import { XCircle, Home, RotateCcw } from "lucide-react";
 import Link from "next/link";
 
@@ -8,6 +9,7 @@ export default async function PaymentCancelPage({
   searchParams: Promise<{ rental_id?: string }>;
 }) {
   const { rental_id } = await searchParams;
+  const result = await handlePaymentCancel({ rentalId: rental_id });
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -23,8 +25,8 @@ export default async function PaymentCancelPage({
             Payment Cancelled
           </h1>
           <p className="text-gray-500 text-sm mt-2">
-            You cancelled the payment. Your rental request is still approved —
-            you can retry anytime.
+            {result.message ||
+              "You cancelled the payment. Your rental request is still approved — you can retry anytime."}
           </p>
         </div>
 

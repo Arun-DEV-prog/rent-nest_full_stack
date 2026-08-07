@@ -1,7 +1,6 @@
 // app/payment/success/page.tsx
-import { verifyPayment } from "../../_actions/paymentAction";
+import { handlePaymentSuccess } from "../../_actions/paymentAction";
 import { CheckCircle2, XCircle, Home } from "lucide-react";
-import { cookies } from "next/headers";
 import Link from "next/link";
 import ReviewForm from "./_components/ReviewForm";
 
@@ -15,25 +14,20 @@ export default async function PaymentSuccessPage({
   }>;
 }) {
   const { session_id, rental_id, property_id } = await searchParams;
-  const cookieStore = await cookies();
-  const fallbackPropertyId = cookieStore.get(
-    "pending_review_property_id",
-  )?.value;
-  const resolvedPropertyId = property_id ?? fallbackPropertyId;
 
-  if (!session_id || !rental_id) {
-    return (
-      <ErrorState message="Invalid payment session. Missing parameters." />
-    );
-  }
-
-  const result = await verifyPayment(session_id, rental_id);
+  const result = await handlePaymentSuccess({
+    sessionId: session_id,
+    rentalId: rental_id,
+    propertyId: property_id,
+  });
 
   if (!result.ok) {
     return (
       <ErrorState message={result.message || "Payment verification failed."} />
     );
   }
+
+  const resolvedPropertyId = result.data?.propertyId as string | undefined;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -67,13 +61,13 @@ export default async function PaymentSuccessPage({
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-500">Session ID</span>
-              <span className="font-mono text-xs text-gray-600 truncate max-w-[200px]">
+              <span className="font-mono text-xs text-gray-600 truncate max-w-50">
                 {session_id}
               </span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-500">Rental ID</span>
-              <span className="font-mono text-xs text-gray-600 truncate max-w-[200px]">
+              <span className="font-mono text-xs text-gray-600 truncate max-w-50">
                 {rental_id}
               </span>
             </div>
